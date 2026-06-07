@@ -2,8 +2,12 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { User, Mail, Lock, Phone, Eye, EyeOff, CheckCircle } from 'lucide-react'
+import { authApi } from '@/lib/api/auth.api'
+import { useAuthStore } from '@/store'
+import toast from 'react-hot-toast'
 
 const requirements = [
   { label: 'At least 8 characters', test: (v: string) => v.length >= 8 },
@@ -12,15 +16,34 @@ const requirements = [
 ]
 
 export default function RegisterPage() {
+  const router = useRouter()
+  const { setUser, setToken } = useAuthStore()
   const [showPassword, setShowPassword] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({
     firstName: '', lastName: '', email: '', phone: '', password: '', confirmPassword: '', agree: false,
   })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (form.password !== form.confirmPassword) { alert('Passwords do not match'); return }
-    window.location.href = '/'
+    if (form.password !== form.confirmPassword) { toast.error('Passwords do not match'); return }
+    if (!form.agree) { toast.error('Please accept the terms to continue'); return }
+    setLoading(true)
+    try {
+      const res = await authApi.register({
+        email: form.email, firstName: form.firstName,
+        lastName: form.lastName, password: form.password,
+        phone: form.phone || undefined,
+      })
+      setUser(res.user)
+      setToken(res.accessToken)
+      toast.success(`Welcome to Destiny E-Commerce, ${res.user.firstName}!`)
+      router.push('/')
+    } catch (err: any) {
+      toast.error(err.message || 'Registration failed')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -131,7 +154,9 @@ export default function RegisterPage() {
               </span>
             </label>
 
-            <button type="submit" className="w-full btn-destiny">Create Account</button>
+            <button type="submit" disabled={loading} className="w-full btn-destiny">
+              {loading ? 'Creating Account...' : 'Create Account'}
+            </button>
           </form>
 
           <p className="text-center mt-6 text-sm text-gray-500">

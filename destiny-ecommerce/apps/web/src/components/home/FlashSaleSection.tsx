@@ -40,7 +40,9 @@ function TimeBlock({ value, label }: { value: number; label: string }) {
 
 export default function FlashSaleSection() {
   const products = getFlashSaleProducts()
-  const { hours, minutes, seconds } = useCountdown('2024-03-10T23:59:59Z')
+  // Flash sale ends midnight of the last day of the current month
+  const flashSaleEnd = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0, 23, 59, 59).toISOString()
+  const { hours, minutes, seconds } = useCountdown(flashSaleEnd)
 
   return (
     <section className="py-12 md:py-16 bg-white">

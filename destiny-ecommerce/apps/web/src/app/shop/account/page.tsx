@@ -1,29 +1,24 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
   User, Package, Heart, MapPin, CreditCard, Bell,
   Shield, LogOut, ChevronRight, Edit2, Check
 } from 'lucide-react'
-import { useAuthStore, useWishlistStore, useCartStore } from '@/store'
+import { useAuthStore, useWishlistStore } from '@/store'
+import api from '@/lib/api/client'
 
-const menuItems = [
-  { id: 'profile', label: 'My Profile', icon: User, badge: null },
-  { id: 'orders', label: 'My Orders', icon: Package, badge: '3' },
-  { id: 'wishlist', label: 'Wishlist', icon: Heart, badge: null },
-  { id: 'addresses', label: 'Addresses', icon: MapPin, badge: null },
-  { id: 'payments', label: 'Payment Methods', icon: CreditCard, badge: null },
-  { id: 'notifications', label: 'Notifications', icon: Bell, badge: '5' },
-  { id: 'security', label: 'Security', icon: Shield, badge: null },
-]
-
-const mockOrders = [
-  { id: '#DEC-001234', date: '28 Feb 2024', total: 390000, status: 'Delivered', statusColor: 'text-green-600 bg-green-100', items: 1 },
-  { id: '#DEC-001198', date: '20 Feb 2024', total: 720000, status: 'Processing', statusColor: 'text-blue-600 bg-blue-100', items: 2 },
-  { id: '#DEC-001156', date: '12 Feb 2024', total: 185000, status: 'Shipped', statusColor: 'text-purple-600 bg-purple-100', items: 1 },
-]
+const STATUS_COLORS: Record<string, string> = {
+  PENDING: 'text-yellow-600 bg-yellow-100',
+  CONFIRMED: 'text-blue-600 bg-blue-100',
+  PROCESSING: 'text-indigo-600 bg-indigo-100',
+  SHIPPED: 'text-purple-600 bg-purple-100',
+  OUT_FOR_DELIVERY: 'text-orange-600 bg-orange-100',
+  DELIVERED: 'text-green-600 bg-green-100',
+  CANCELLED: 'text-red-600 bg-red-100',
+}
 
 function formatCFA(n: number) {
   return `${n.toLocaleString()} FCFA`
@@ -31,9 +26,36 @@ function formatCFA(n: number) {
 
 export default function AccountPage() {
   const [activeTab, setActiveTab] = useState('profile')
-  const { user, logout } = useAuthStore()
+  const { user, token, logout } = useAuthStore()
   const wishlistCount = useWishlistStore(s => s.items.length)
   const [editing, setEditing] = useState(false)
+  const [orders, setOrders] = useState<any[]>([])
+  const [ordersLoading, setOrdersLoading] = useState(false)
+  const [orderCount, setOrderCount] = useState(0)
+
+  const menuItems = [
+    { id: 'profile', label: 'My Profile', icon: User, badge: null },
+    { id: 'orders', label: 'My Orders', icon: Package, badge: orderCount > 0 ? String(orderCount) : null },
+    { id: 'wishlist', label: 'Wishlist', icon: Heart, badge: null },
+    { id: 'addresses', label: 'Addresses', icon: MapPin, badge: null },
+    { id: 'payments', label: 'Payment Methods', icon: CreditCard, badge: null },
+    { id: 'notifications', label: 'Notifications', icon: Bell, badge: null },
+    { id: 'security', label: 'Security', icon: Shield, badge: null },
+  ]
+
+  useEffect(() => {
+    if (token && activeTab === 'orders') loadOrders()
+  }, [token, activeTab])
+
+  async function loadOrders() {
+    setOrdersLoading(true)
+    try {
+      const res = await api.get<any>('/orders?limit=10', token!)
+      setOrders(res.data || [])
+      setOrderCount(res.total || 0)
+    } catch { setOrders([]) }
+    finally { setOrdersLoading(false) }
+  }
 
   if (!user) {
     return (
@@ -75,7 +97,7 @@ export default function AccountPage() {
               </div>
               <div className="grid grid-cols-2 gap-3 text-center">
                 <div className="bg-gray-50 rounded-xl p-3">
-                  <div className="text-xl font-bold text-destiny-pink">12</div>
+                  <div className="text-xl font-bold text-destiny-pink">{orderCount}</div>
                   <div className="text-xs text-gray-500">Orders</div>
                 </div>
                 <div className="bg-gray-50 rounded-xl p-3">
@@ -154,21 +176,32 @@ export default function AccountPage() {
             {activeTab === 'orders' && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
                 <div className="bg-white rounded-2xl shadow-card overflow-hidden">
-                  <div className="p-6 border-b border-gray-100">
+                  <div className="p-6 border-b border-gray-100 flex items-center justify-between">
                     <h2 className="text-lg font-bold text-gray-900">My Orders</h2>
+                    <Link href="/shop/orders" className="text-sm text-destiny-pink font-medium hover:underline">View all</Link>
                   </div>
                   <div className="divide-y divide-gray-50">
-                    {mockOrders.map(order => (
+                    {ordersLoading ? (
+                      <div className="py-10 text-center text-gray-400">Loading orders...</div>
+                    ) : orders.length === 0 ? (
+                      <div className="py-10 text-center text-gray-400">
+                        <Package size={32} className="mx-auto mb-3 text-gray-300" />
+                        <p>No orders yet</p>
+                        <Link href="/shop" className="text-destiny-pink text-sm font-medium hover:underline mt-1 inline-block">Start shopping</Link>
+                      </div>
+                    ) : orders.map((order: any) => (
                       <div key={order.id} className="p-5 hover:bg-gray-50 transition-colors">
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="font-mono font-bold text-destiny-pink text-sm">{order.id}</p>
-                            <p className="text-xs text-gray-500 mt-1">{order.date} · {order.items} item{order.items !== 1 ? 's' : ''}</p>
+                            <p className="font-mono font-bold text-destiny-pink text-sm">{order.orderNumber}</p>
+                            <p className="text-xs text-gray-500 mt-1">
+                              {new Date(order.createdAt).toLocaleDateString()} · {order._count?.items ?? order.items?.length ?? 0} item(s)
+                            </p>
                           </div>
                           <div className="text-right">
-                            <p className="font-bold text-gray-900">{formatCFA(order.total)}</p>
-                            <span className={`inline-block mt-1 px-3 py-1 rounded-full text-xs font-semibold ${order.statusColor}`}>
-                              {order.status}
+                            <p className="font-bold text-gray-900">{formatCFA(Number(order.total))}</p>
+                            <span className={`inline-block mt-1 px-3 py-1 rounded-full text-xs font-semibold ${STATUS_COLORS[order.status] || 'text-gray-600 bg-gray-100'}`}>
+                              {order.status.replace(/_/g, ' ')}
                             </span>
                           </div>
                         </div>
@@ -179,7 +212,7 @@ export default function AccountPage() {
                           >
                             View Details
                           </Link>
-                          {order.status === 'Delivered' && (
+                          {order.status === 'DELIVERED' && (
                             <button className="px-4 py-1.5 border border-destiny-pink text-destiny-pink rounded-lg text-xs font-medium hover:bg-destiny-50 transition-colors">
                               Review
                             </button>

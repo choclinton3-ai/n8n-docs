@@ -2,17 +2,34 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Mail, Lock, Eye, EyeOff, Chrome, Facebook } from 'lucide-react'
+import { authApi } from '@/lib/api/auth.api'
+import { useAuthStore } from '@/store'
+import toast from 'react-hot-toast'
 
 export default function LoginPage() {
+  const router = useRouter()
+  const { setUser, setToken } = useAuthStore()
   const [showPassword, setShowPassword] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({ email: '', password: '', remember: false })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: integrate auth API
-    window.location.href = '/'
+    setLoading(true)
+    try {
+      const res = await authApi.login({ email: form.email, password: form.password, rememberMe: form.remember })
+      setUser(res.user)
+      setToken(res.accessToken)
+      toast.success(`Welcome back, ${res.user.firstName}!`)
+      router.push(res.user.role === 'SUPER_ADMIN' || res.user.role === 'ADMIN' ? '/admin/dashboard' : '/')
+    } catch (err: any) {
+      toast.error(err.message || 'Invalid email or password')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -106,8 +123,8 @@ export default function LoginPage() {
               </Link>
             </div>
 
-            <button type="submit" className="w-full btn-destiny">
-              Sign In
+            <button type="submit" disabled={loading} className="w-full btn-destiny">
+              {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
 

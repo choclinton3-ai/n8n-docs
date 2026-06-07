@@ -1,10 +1,13 @@
-import { NestFactory } from '@nestjs/core'
+import { NestFactory, Reflector } from '@nestjs/core'
 import { ValidationPipe, Logger } from '@nestjs/common'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import { ConfigService } from '@nestjs/config'
 import helmet from 'helmet'
 import compression from 'compression'
 import { AppModule } from './app.module'
+import { AllExceptionsFilter } from './common/filters/http-exception.filter'
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
+import { JwtAuthGuard } from './common/guards/jwt-auth.guard'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -30,6 +33,12 @@ async function bootstrap() {
 
   // Global prefix
   app.setGlobalPrefix('api/v1')
+
+  // Global guards, filters, interceptors
+  const reflector = app.get(Reflector)
+  app.useGlobalGuards(new JwtAuthGuard(reflector))
+  app.useGlobalFilters(new AllExceptionsFilter())
+  app.useGlobalInterceptors(new LoggingInterceptor())
 
   // Validation
   app.useGlobalPipes(

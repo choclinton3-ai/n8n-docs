@@ -2,29 +2,36 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { ChevronRight, ShieldCheck, Smartphone, CreditCard, Truck, CheckCircle } from 'lucide-react'
-import { useCartStore } from '@/store'
+import { ChevronRight, ShieldCheck, Smartphone, CreditCard, Truck, CheckCircle, AlertCircle } from 'lucide-react'
+import { useCartStore, useAuthStore } from '@/store'
 import { formatCFA } from '@/lib/data/products'
+import { ordersApi } from '@/lib/api/orders.api'
+import toast from 'react-hot-toast'
 
-const paymentMethods = [
-  { id: 'mtn', name: 'MTN Mobile Money', icon: '📱', color: '#FFCC00', description: 'Pay with MTN MoMo' },
-  { id: 'orange', name: 'Orange Money', icon: '🟠', color: '#FF6600', description: 'Pay with Orange Money' },
-  { id: 'visa', name: 'Visa / Mastercard', icon: '💳', color: '#1A1F71', description: 'International cards' },
-  { id: 'paypal', name: 'PayPal', icon: '🅿️', color: '#003087', description: 'Pay via PayPal' },
-  { id: 'cod', name: 'Cash on Delivery', icon: '💵', color: '#10b981', description: 'Pay when delivered' },
+const PAYMENT_METHODS = [
+  { id: 'MTN_MOBILE_MONEY', name: 'MTN Mobile Money', icon: '📱', color: '#FFCC00', description: 'Pay with MTN MoMo — 653526767' },
+  { id: 'ORANGE_MONEY', name: 'Orange Money', icon: '🟠', color: '#FF6600', description: 'Pay with Orange Money — 640638536' },
+  { id: 'VISA', name: 'Visa / Mastercard', icon: '💳', color: '#1A1F71', description: 'International cards (coming soon)' },
+  { id: 'PAYPAL', name: 'PayPal', icon: '🅿️', color: '#003087', description: 'Pay via PayPal (coming soon)' },
+  { id: 'CASH_ON_DELIVERY', name: 'Cash on Delivery', icon: '💵', color: '#10b981', description: 'Pay when delivered' },
 ]
 
 type Step = 'info' | 'shipping' | 'payment' | 'review' | 'success'
 
 export default function CheckoutPage() {
+  const router = useRouter()
   const { items, getSubtotal, getTotal, discount, couponCode, clearCart } = useCartStore()
+  const { token, user } = useAuthStore()
   const [step, setStep] = useState<Step>('info')
-  const [selectedPayment, setSelectedPayment] = useState('mtn')
+  const [selectedPayment, setSelectedPayment] = useState('MTN_MOBILE_MONEY')
+  const [placedOrder, setPlacedOrder] = useState<any>(null)
+  const [submitting, setSubmitting] = useState(false)
   const [form, setForm] = useState({
-    firstName: '', lastName: '', email: '', phone: '',
-    street: '', city: '', region: '', country: 'Cameroon',
-    notes: '',
+    firstName: user?.firstName || '', lastName: user?.lastName || '',
+    email: user?.email || '', phone: user?.phone || '',
+    street: '', city: '', region: '', country: 'Cameroon', notes: '',
   })
 
   const subtotal = getSubtotal()
@@ -34,15 +41,30 @@ export default function CheckoutPage() {
 
   const handleField = (key: string, value: string) => setForm(prev => ({ ...prev, [key]: value }))
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (step === 'info') setStep('shipping')
-    else if (step === 'shipping') setStep('payment')
-    else if (step === 'payment') setStep('review')
-    else if (step === 'review') {
-      // Process order
-      setStep('success')
-      clearCart()
+    if (step === 'info') { setStep('shipping'); return }
+    if (step === 'shipping') { setStep('payment'); return }
+    if (step === 'payment') { setStep('review'); return }
+    if (step === 'review') {
+      if (!token) { toast.error('Please sign in to place an order'); router.push('/auth/login'); return }
+      setSubmitting(true)
+      try {
+        const order = await ordersApi.create({
+          items: items.map(i => ({ productId: i.product.id, quantity: i.quantity })),
+          paymentMethod: selectedPayment,
+          shippingAddress: { firstName: form.firstName, lastName: form.lastName, phone: form.phone, street: form.street, city: form.city, region: form.region, country: form.country },
+          couponCode: couponCode || undefined,
+          notes: form.notes || undefined,
+        }, token)
+        setPlacedOrder(order)
+        clearCart()
+        setStep('success')
+      } catch (err: any) {
+        toast.error(err.message || 'Failed to place order. Please try again.')
+      } finally {
+        setSubmitting(false)
+      }
     }
   }
 
@@ -53,27 +75,51 @@ export default function CheckoutPage() {
     { id: 'review', label: 'Review', number: 4 },
   ]
 
-  if (step === 'success') {
+  if (step === 'success' && placedOrder) {
+    const isMoMo = ['MTN_MOBILE_MONEY', 'ORANGE_MONEY'].includes(selectedPayment)
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="bg-white rounded-3xl shadow-xl p-10 text-center max-w-lg w-full"
-        >
+        <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white rounded-3xl shadow-xl p-10 text-center max-w-lg w-full">
           <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle size={48} className="text-green-500" />
           </div>
-          <h2 className="text-3xl font-black font-display text-gray-900 mb-3">Order Confirmed!</h2>
-          <p className="text-gray-500 mb-2">Thank you for shopping with Destiny E-Commerce</p>
-          <p className="text-gray-500 text-sm mb-8">Order #DEC-{Date.now().toString().slice(-8)} has been placed. You'll receive a confirmation SMS and email shortly.</p>
-          <div className="bg-destiny-50 rounded-2xl p-4 mb-8 text-sm">
+          <h2 className="text-3xl font-black font-display text-gray-900 mb-2">Order Placed!</h2>
+          <p className="font-mono text-destiny-pink font-bold text-lg mb-1">{placedOrder.orderNumber}</p>
+          <p className="text-gray-500 text-sm mb-6">Your order has been received. Now complete payment below.</p>
+
+          {isMoMo && (
+            <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-5 mb-6 text-left">
+              <div className="flex items-center gap-2 mb-3">
+                <AlertCircle size={18} className="text-yellow-600" />
+                <p className="font-bold text-yellow-800">Complete Your Payment</p>
+              </div>
+              {selectedPayment === 'MTN_MOBILE_MONEY' ? (
+                <div className="space-y-1.5 text-sm text-yellow-800">
+                  <p>1. Dial <code className="bg-yellow-100 px-1.5 py-0.5 rounded font-mono">*126*4*1*653526767*{Math.round(Number(placedOrder.total))}#</code></p>
+                  <p>2. OR: MTN MoMo app → Send Money → <strong>653526767</strong></p>
+                  <p>3. Amount: <strong>{Number(placedOrder.total).toLocaleString()} FCFA</strong></p>
+                  <p>4. Note: <strong>{placedOrder.orderNumber}</strong></p>
+                  <p>5. After payment, go to <Link href={`/shop/orders/${placedOrder.id}`} className="underline font-bold">My Orders</Link> → Submit transaction ID</p>
+                </div>
+              ) : (
+                <div className="space-y-1.5 text-sm text-yellow-800">
+                  <p>1. Dial <code className="bg-yellow-100 px-1.5 py-0.5 rounded font-mono">#150*1#</code> or open Orange Money app</p>
+                  <p>2. Send to: <strong>640638536</strong> (Cho Clinton Teneng)</p>
+                  <p>3. Amount: <strong>{Number(placedOrder.total).toLocaleString()} FCFA</strong></p>
+                  <p>4. Note: <strong>{placedOrder.orderNumber}</strong></p>
+                  <p>5. After payment, go to <Link href={`/shop/orders/${placedOrder.id}`} className="underline font-bold">My Orders</Link> → Submit transaction ID</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="bg-destiny-50 rounded-2xl p-4 mb-6 text-sm">
             <p className="font-semibold text-gray-900 mb-1">Estimated Delivery</p>
-            <p className="text-gray-600">Douala/Yaoundé: 24–48 hours<br/>Other cities: 2–5 business days</p>
+            <p className="text-gray-600">Douala/Yaoundé: 24–48 hours · Other cities: 2–5 business days</p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
-            <Link href="/shop/orders" className="flex-1 btn-destiny text-center">Track Order</Link>
-            <Link href="/shop" className="flex-1 py-3 border-2 border-destiny-pink text-destiny-pink rounded-xl font-semibold text-center hover:bg-destiny-50 transition-colors">Continue Shopping</Link>
+            <Link href={`/shop/orders/${placedOrder.id}`} className="flex-1 btn-destiny text-center">Track Order</Link>
+            <Link href="/shop" className="flex-1 py-3 border-2 border-destiny-pink text-destiny-pink rounded-xl font-semibold text-center hover:bg-destiny-50">Continue Shopping</Link>
           </div>
         </motion.div>
       </div>
@@ -289,8 +335,8 @@ export default function CheckoutPage() {
                   Back
                 </button>
               )}
-              <button type="submit" className="flex-1 btn-destiny flex items-center justify-center gap-2">
-                {step === 'review' ? 'Place Order' : 'Continue'} <ChevronRight size={20} />
+              <button type="submit" disabled={submitting} className="flex-1 btn-destiny flex items-center justify-center gap-2">
+                {submitting ? 'Placing Order...' : step === 'review' ? 'Place Order' : 'Continue'} {!submitting && <ChevronRight size={20} />}
               </button>
             </div>
           </form>
