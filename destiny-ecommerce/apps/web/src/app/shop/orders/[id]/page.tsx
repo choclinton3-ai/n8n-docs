@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Package, CreditCard, MapPin, Clock, CheckCircle, Truck, AlertCircle } from 'lucide-react'
+import CopyButton from '@/components/ui/CopyButton'
 import { useAuthStore } from '@/store'
 import { ordersApi } from '@/lib/api/orders.api'
 import toast from 'react-hot-toast'
@@ -75,7 +76,10 @@ export default function OrderDetailPage() {
             <ArrowLeft size={16} /> My Orders
           </Link>
           <div className="flex items-center justify-between">
-            <h1 className="text-xl font-bold font-display">Order {order.orderNumber}</h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl font-bold font-display">Order {order.orderNumber}</h1>
+              <CopyButton text={order.orderNumber} label="order number" />
+            </div>
             <span className="px-3 py-1.5 rounded-full text-sm font-bold" style={{ color: STATUS_COLORS[order.status], background: STATUS_COLORS[order.status] + '20' }}>
               {order.status.replace(/_/g, ' ')}
             </span>

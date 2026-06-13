@@ -4,6 +4,7 @@ import { useAuthStore } from '@/store'
 import api from '@/lib/api/client'
 import toast from 'react-hot-toast'
 import { Plus, RefreshCw, Trash2, Tag, Image as ImageIcon } from 'lucide-react'
+import CopyButton from '@/components/ui/CopyButton'
 
 export default function AdminMarketingPage() {
   const { token } = useAuthStore()
@@ -149,7 +150,12 @@ export default function AdminMarketingPage() {
                     <tr><td colSpan={6} className="text-center py-8 text-gray-400">No coupons yet</td></tr>
                   ) : coupons.map(c => (
                     <tr key={c.id} className="hover:bg-gray-50">
-                      <td className="px-5 py-3 font-mono font-bold text-destiny-pink">{c.code}</td>
+                      <td className="px-5 py-3">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono font-bold text-destiny-pink">{c.code}</span>
+                          <CopyButton text={c.code} label="coupon code" />
+                        </div>
+                      </td>
                       <td className="px-5 py-3 font-bold">
                         {c.discountType === 'PERCENTAGE' ? `${c.discountValue}%` : `${Number(c.discountValue).toLocaleString()} FCFA`}
                       </td>

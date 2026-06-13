@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { ChevronRight, ShieldCheck, Smartphone, CreditCard, Truck, CheckCircle, AlertCircle } from 'lucide-react'
+import CopyButton from '@/components/ui/CopyButton'
 import { useCartStore, useAuthStore } from '@/store'
 import { formatCFA } from '@/lib/data/products'
 import { ordersApi } from '@/lib/api/orders.api'
@@ -84,7 +85,10 @@ export default function CheckoutPage() {
             <CheckCircle size={48} className="text-green-500" />
           </div>
           <h2 className="text-3xl font-black font-display text-gray-900 mb-2">Order Placed!</h2>
-          <p className="font-mono text-destiny-pink font-bold text-lg mb-1">{placedOrder.orderNumber}</p>
+          <div className="flex items-center justify-center gap-2 mb-1">
+            <p className="font-mono text-destiny-pink font-bold text-lg">{placedOrder.orderNumber}</p>
+            <CopyButton text={placedOrder.orderNumber} label="order number" />
+          </div>
           <p className="text-gray-500 text-sm mb-6">Your order has been received. Now complete payment below.</p>
 
           {isMoMo && (
@@ -95,18 +99,35 @@ export default function CheckoutPage() {
               </div>
               {selectedPayment === 'MTN_MOBILE_MONEY' ? (
                 <div className="space-y-1.5 text-sm text-yellow-800">
-                  <p>1. Dial <code className="bg-yellow-100 px-1.5 py-0.5 rounded font-mono">*126*4*1*653526767*{Math.round(Number(placedOrder.total))}#</code></p>
+                  <p className="flex items-center gap-2 flex-wrap">
+                    1. Dial{' '}
+                    <code className="bg-yellow-100 px-1.5 py-0.5 rounded font-mono">
+                      *126*4*1*653526767*{Math.round(Number(placedOrder.total))}#
+                    </code>
+                    <CopyButton text={`*126*4*1*653526767*${Math.round(Number(placedOrder.total))}#`} label="USSD code" variant="pill" />
+                  </p>
                   <p>2. OR: MTN MoMo app → Send Money → <strong>653526767</strong></p>
                   <p>3. Amount: <strong>{Number(placedOrder.total).toLocaleString()} FCFA</strong></p>
-                  <p>4. Note: <strong>{placedOrder.orderNumber}</strong></p>
+                  <p className="flex items-center gap-2">
+                    4. Note:{' '}<strong>{placedOrder.orderNumber}</strong>
+                    <CopyButton text={placedOrder.orderNumber} label="order number" variant="inline" />
+                  </p>
                   <p>5. After payment, go to <Link href={`/shop/orders/${placedOrder.id}`} className="underline font-bold">My Orders</Link> → Submit transaction ID</p>
                 </div>
               ) : (
                 <div className="space-y-1.5 text-sm text-yellow-800">
-                  <p>1. Dial <code className="bg-yellow-100 px-1.5 py-0.5 rounded font-mono">#150*1#</code> or open Orange Money app</p>
+                  <p className="flex items-center gap-2 flex-wrap">
+                    1. Dial{' '}
+                    <code className="bg-yellow-100 px-1.5 py-0.5 rounded font-mono">#150*1#</code>
+                    <CopyButton text="#150*1#" label="USSD code" variant="pill" />
+                    or open Orange Money app
+                  </p>
                   <p>2. Send to: <strong>640638536</strong> (Cho Clinton Teneng)</p>
                   <p>3. Amount: <strong>{Number(placedOrder.total).toLocaleString()} FCFA</strong></p>
-                  <p>4. Note: <strong>{placedOrder.orderNumber}</strong></p>
+                  <p className="flex items-center gap-2">
+                    4. Note:{' '}<strong>{placedOrder.orderNumber}</strong>
+                    <CopyButton text={placedOrder.orderNumber} label="order number" variant="inline" />
+                  </p>
                   <p>5. After payment, go to <Link href={`/shop/orders/${placedOrder.id}`} className="underline font-bold">My Orders</Link> → Submit transaction ID</p>
                 </div>
               )}
