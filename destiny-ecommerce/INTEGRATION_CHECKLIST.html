@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Destiny E-Commerce — Integration & Deployment Checklist</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8f9fa; color: #1a1a2e; line-height: 1.6; }
+  .hero { background: linear-gradient(135deg, #FF007F 0%, #8B00FF 100%); color: white; padding: 48px 32px; text-align: center; }
+  .hero h1 { font-size: 2.2rem; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 8px; }
+  .hero p { opacity: 0.9; font-size: 1rem; }
+  .badge { display: inline-block; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 4px 14px; font-size: 0.78rem; font-weight: 600; margin-top: 12px; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 32px 20px; }
+  .progress-bar { background: white; border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  .progress-bar h2 { font-size: 1rem; font-weight: 700; color: #6b7280; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .progress-track { background: #f3f4f6; border-radius: 8px; height: 12px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, #FF007F, #8B00FF); border-radius: 8px; transition: width 0.5s; }
+  .progress-labels { display: flex; justify-content: space-between; font-size: 0.78rem; color: #9ca3af; margin-top: 6px; }
+  .section { background: white; border-radius: 16px; padding: 0; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden; }
+  .section-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px; border-bottom: 1px solid #f3f4f6; cursor: pointer; user-select: none; }
+  .section-header:hover { background: #fafafa; }
+  .section-title { display: flex; align-items: center; gap: 12px; }
+  .section-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+  .section-name { font-size: 1rem; font-weight: 700; color: #111827; }
+  .section-meta { font-size: 0.78rem; color: #9ca3af; margin-top: 2px; }
+  .section-badge { font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+  .badge-required { background: #fee2e2; color: #dc2626; }
+  .badge-optional { background: #f3f4f6; color: #6b7280; }
+  .badge-done { background: #d1fae5; color: #059669; }
+  .section-body { padding: 8px 24px 20px; }
+  .checklist { list-style: none; }
+  .checklist li { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f9fafb; }
+  .checklist li:last-child { border-bottom: none; }
+  .check-box { width: 20px; height: 20px; border: 2px solid #e5e7eb; border-radius: 5px; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; margin-top: 2px; }
+  .check-box.checked { background: #FF007F; border-color: #FF007F; }
+  .check-box.checked::after { content: '✓'; color: white; font-size: 0.75rem; font-weight: 800; }
+  .check-content { flex: 1; }
+  .check-title { font-size: 0.9rem; font-weight: 600; color: #1f2937; }
+  .check-detail { font-size: 0.8rem; color: #6b7280; margin-top: 2px; }
+  .check-code { font-family: 'JetBrains Mono', 'Courier New', monospace; background: #f3f4f6; border-radius: 4px; padding: 1px 5px; font-size: 0.78rem; color: #111827; }
+  .check-tag { display: inline-block; font-size: 0.68rem; font-weight: 700; padding: 2px 7px; border-radius: 10px; margin-left: 6px; }
+  .tag-free { background: #d1fae5; color: #059669; }
+  .tag-paid { background: #fef3c7; color: #d97706; }
+  .tag-critical { background: #fee2e2; color: #dc2626; }
+  .cost-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 8px; }
+  .cost-table th { text-align: left; padding: 8px 12px; background: #f9fafb; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #6b7280; font-weight: 700; }
+  .cost-table td { padding: 10px 12px; border-bottom: 1px solid #f3f4f6; }
+  .cost-table tr:hover td { background: #fafafa; }
+  .total-row td { font-weight: 700; background: #f9fafb; color: #111827; border-top: 2px solid #e5e7eb; }
+  .env-block { background: #1e1e2e; border-radius: 10px; padding: 16px; margin-top: 12px; overflow-x: auto; }
+  .env-block code { font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 0.8rem; color: #cdd6f4; white-space: pre; display: block; line-height: 1.8; }
+  .env-comment { color: #6c7086; }
+  .env-key { color: #89b4fa; }
+  .env-val { color: #a6e3a1; }
+  .copy-btn { float: right; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #cdd6f4; border-radius: 6px; padding: 4px 10px; font-size: 0.75rem; cursor: pointer; font-family: inherit; }
+  .copy-btn:hover { background: rgba(255,255,255,0.2); }
+  .tip-box { background: #eff6ff; border-left: 3px solid #3b82f6; border-radius: 0 8px 8px 0; padding: 12px 16px; margin-top: 12px; font-size: 0.83rem; color: #1d4ed8; }
+  .tip-box strong { font-weight: 700; }
+  .warn-box { background: #fff7ed; border-left: 3px solid #f97316; border-radius: 0 8px 8px 0; padding: 12px 16px; margin-top: 12px; font-size: 0.83rem; color: #9a3412; }
+  .actions-bar { position: sticky; bottom: 20px; background: white; border-radius: 16px; padding: 16px 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 20px auto 0; }
+  .actions-bar .counter { font-size: 0.85rem; color: #6b7280; }
+  .actions-bar .counter strong { color: #FF007F; font-size: 1.1rem; }
+  .btn-primary { background: linear-gradient(135deg, #FF007F, #8B00FF); color: white; border: none; border-radius: 10px; padding: 10px 20px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: opacity 0.15s; }
+  .btn-primary:hover { opacity: 0.9; }
+  .chevron { transition: transform 0.2s; font-size: 0.75rem; color: #9ca3af; }
+  .chevron.open { transform: rotate(180deg); }
+  .collapsed { display: none; }
+  @media (max-width: 600px) { .hero h1 { font-size: 1.6rem; } .section-header { flex-wrap: wrap; gap: 8px; } }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>🚀 Destiny E-Commerce</h1>
+  <p>Integration & Deployment Checklist — Complete Setup Guide</p>
+  <span class="badge">Cameroon · FCFA · MTN MoMo + Orange Money</span>
+</div>
+
+<div class="container">
+
+  <!-- Progress -->
+  <div class="progress-bar">
+    <h2>Setup Progress</h2>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="progress-labels">
+      <span>0 completed</span>
+      <span id="progressPct">0%</span>
+      <span id="totalCount">0 tasks</span>
+    </div>
+  </div>
+
+  <!-- SECTION 1: Domain & Hosting -->
+  <div class="section" id="sec1">
+    <div class="section-header" onclick="toggle('sec1')">
+      <div class="section-title">
+        <div class="section-icon" style="background:#eff6ff">🌐</div>
+        <div>
+          <div class="section-name">1. Domain & Hosting</div>
+          <div class="section-meta">Where your app lives on the internet</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="section-badge badge-required">Required</span>
+        <span class="chevron" id="chev1">▼</span>
+      </div>
+    </div>
+    <div class="section-body" id="body1">
+      <ul class="checklist">
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Register a domain name <span class="check-tag tag-paid">~$12/yr</span></div><div class="check-detail">Recommended: Namecheap or GoDaddy. Suggested: <span class="check-code">destiny-ecommerce.cm</span> (Cameroon TLD) or <span class="check-code">.com</span></div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Choose API hosting <span class="check-tag tag-paid">$5–20/mo</span></div><div class="check-detail">Options: Railway (easiest), Render.com, DigitalOcean App Platform, or VPS. Railway free tier: 500hrs/month</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Choose Next.js hosting</div><div class="check-detail"><span class="check-tag tag-free">Free tier</span> Vercel (recommended — built for Next.js) or Netlify. Set up at vercel.com</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Point DNS to hosting</div><div class="check-detail">Add A/CNAME records in your domain registrar pointing to your deployed app URLs</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Configure SSL certificates</div><div class="check-detail"><span class="check-tag tag-free">Auto</span> Vercel and Railway auto-provision Let's Encrypt SSL. Required for payment flows.</div></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 2: Database -->
+  <div class="section" id="sec2">
+    <div class="section-header" onclick="toggle('sec2')">
+      <div class="section-title">
+        <div class="section-icon" style="background:#f0fdf4">🗄️</div>
+        <div>
+          <div class="section-name">2. PostgreSQL Database</div>
+          <div class="section-meta">Primary data store for all platform data</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="section-badge badge-required">Required</span>
+        <span class="chevron" id="chev2">▼</span>
+      </div>
+    </div>
+    <div class="section-body" id="body2">
+      <ul class="checklist">
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Create PostgreSQL database <span class="check-tag tag-free">Free tier available</span></div><div class="check-detail">Options: Supabase (free 500MB), Neon (free 3GB), Railway PostgreSQL, or PlanetScale. Get connection string.</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Set DATABASE_URL environment variable</div><div class="check-detail"><span class="check-code">postgresql://user:password@host:5432/destiny_db?schema=public&sslmode=require</span></div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Run Prisma migrations</div><div class="check-detail">From <span class="check-code">apps/api/</span> run: <span class="check-code">npx prisma migrate deploy</span> (production) or <span class="check-code">npx prisma migrate dev</span> (dev)</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Generate Prisma client</div><div class="check-detail"><span class="check-code">npx prisma generate</span> — must run after every schema change</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Seed initial data (optional)</div><div class="check-detail"><span class="check-code">npx ts-node prisma/seed.ts</span> — creates admin user, sample categories, and brands</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Set up Redis (optional, for caching)</div><div class="check-detail"><span class="check-tag tag-free">Free tier</span> Upstash Redis. Set <span class="check-code">REDIS_URL</span>. Falls back gracefully if not set.</div></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 3: Authentication -->
+  <div class="section" id="sec3">
+    <div class="section-header" onclick="toggle('sec3')">
+      <div class="section-title">
+        <div class="section-icon" style="background:#fdf4ff">🔐</div>
+        <div>
+          <div class="section-name">3. Authentication Setup</div>
+          <div class="section-meta">JWT secrets and OAuth providers</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="section-badge badge-required">Required</span>
+        <span class="chevron" id="chev3">▼</span>
+      </div>
+    </div>
+    <div class="section-body" id="body3">
+      <ul class="checklist">
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Generate JWT secrets <span class="check-tag tag-critical">Critical</span></div><div class="check-detail">Run: <span class="check-code">openssl rand -base64 64</span> twice — once for JWT_SECRET, once for JWT_REFRESH_SECRET. Never reuse.</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Create first SUPER_ADMIN account</div><div class="check-detail">Register via <span class="check-code">POST /api/v1/auth/register</span> then update role in DB: <span class="check-code">UPDATE users SET role = 'SUPER_ADMIN' WHERE email = 'your@email.com';</span></div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Google OAuth (optional)</div><div class="check-detail">Create project at console.cloud.google.com → Credentials → OAuth 2.0 Client ID. Set redirect URI to <span class="check-code">https://yourdomain.com/api/v1/auth/google/callback</span>. Copy GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Facebook OAuth (optional)</div><div class="check-detail">Create app at developers.facebook.com → Facebook Login. Set redirect URI. Copy FACEBOOK_APP_ID and FACEBOOK_APP_SECRET.</div></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 4: Payments -->
+  <div class="section" id="sec4">
+    <div class="section-header" onclick="toggle('sec4')">
+      <div class="section-title">
+        <div class="section-icon" style="background:#fff7ed">💳</div>
+        <div>
+          <div class="section-name">4. Cameroon Payment Setup</div>
+          <div class="section-meta">MTN MoMo (653526767) · Orange Money (640638536)</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="section-badge badge-required">Required</span>
+        <span class="chevron" id="chev4">▼</span>
+      </div>
+    </div>
+    <div class="section-body" id="body4">
+      <div class="tip-box"><strong>Current Status:</strong> Platform runs in <strong>manual verification mode</strong> — customers send money to your numbers, submit transaction ID, you approve in admin panel. API integration is optional for automation.</div>
+      <ul class="checklist" style="margin-top:12px">
+        <li><div class="check-box checked" onclick="check(this)"></div><div class="check-content"><div class="check-title">MTN MoMo manual number configured</div><div class="check-detail">Number: <strong>653526767</strong> — USSD: <span class="check-code">*126*4*1*653526767*AMOUNT#</span> — already hardcoded in platform ✓</div></div></li>
+        <li><div class="check-box checked" onclick="check(this)"></div><div class="check-content"><div class="check-title">Orange Money manual number configured</div><div class="check-detail">Number: <strong>640638536</strong> (Cho Clinton Teneng) — already hardcoded in platform ✓</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Register for MTN MoMo API (optional, for automation) <span class="check-tag tag-paid">Business account required</span></div><div class="check-detail">Apply at momodeveloper.mtn.com → create API user → get API key. Set MTN_MOMO_API_KEY, MTN_MOMO_SUBSCRIPTION_KEY, MTN_MOMO_ENVIRONMENT</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Register for Orange Money API (optional) <span class="check-tag tag-paid">Business account required</span></div><div class="check-detail">Contact Orange Business Services Cameroon. Set ORANGE_CLIENT_ID and ORANGE_CLIENT_SECRET when approved.</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Create admin workflow for payment verification</div><div class="check-detail">Go to Admin → Orders → filter by CONFIRMED status → click ✓ to approve or ✗ to reject payment proofs</div></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 5: Email -->
+  <div class="section" id="sec5">
+    <div class="section-header" onclick="toggle('sec5')">
+      <div class="section-title">
+        <div class="section-icon" style="background:#f0fdf4">📧</div>
+        <div>
+          <div class="section-name">5. Email Notifications</div>
+          <div class="section-meta">Order confirmations, password resets, shipping updates</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="section-badge badge-optional">Recommended</span>
+        <span class="chevron" id="chev5">▼</span>
+      </div>
+    </div>
+    <div class="section-body" id="body5">
+      <div class="tip-box"><strong>Graceful degradation:</strong> If SMTP is not configured, all emails are logged to console instead of crashing the server.</div>
+      <ul class="checklist" style="margin-top:12px">
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Create SendGrid account <span class="check-tag tag-free">Free 100 emails/day</span></div><div class="check-detail">Register at sendgrid.com → Settings → API Keys → Create API Key (Full Access). Set SMTP_HOST=smtp.sendgrid.net, SMTP_PORT=587, SMTP_USER=apikey, SMTP_PASS=your_api_key</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Alternative: Gmail SMTP</div><div class="check-detail">Enable 2FA → App Passwords → Generate. Set SMTP_HOST=smtp.gmail.com, SMTP_PORT=587, SMTP_USER=your@gmail.com, SMTP_PASS=app_password</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Set SMTP_FROM_EMAIL and SMTP_FROM_NAME</div><div class="check-detail">Example: <span class="check-code">SMTP_FROM_EMAIL=hello@destiny-ecommerce.com</span> and <span class="check-code">SMTP_FROM_NAME=Destiny E-Commerce</span></div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Verify sender domain (SendGrid)</div><div class="check-detail">Add DNS TXT/CNAME records from SendGrid to authenticate your domain. Prevents spam filtering.</div></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 6: SMS -->
+  <div class="section" id="sec6">
+    <div class="section-header" onclick="toggle('sec6')">
+      <div class="section-title">
+        <div class="section-icon" style="background:#f0f9ff">📱</div>
+        <div>
+          <div class="section-name">6. SMS Notifications (Africa's Talking)</div>
+          <div class="section-meta">Order alerts and OTP via SMS to Cameroon numbers</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="section-badge badge-optional">Optional</span>
+        <span class="chevron" id="chev6">▼</span>
+      </div>
+    </div>
+    <div class="section-body" id="body6">
+      <ul class="checklist">
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Create Africa's Talking account</div><div class="check-detail">Register at africastalking.com. Free sandbox for testing. Production requires funding account.</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Get API key and username</div><div class="check-detail">Dashboard → Settings → API Key. Set <span class="check-code">AT_API_KEY</span> and <span class="check-code">AT_USERNAME</span> (sandbox uses "sandbox")</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Register Sender ID (optional)</div><div class="check-detail">Apply for branded sender like "DESTINY" — takes 2–4 weeks. Set <span class="check-code">AT_SENDER_ID=Destiny</span>. Without it, uses a random short code.</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Top up account balance</div><div class="check-detail">~0.8 XAF per SMS to Cameroon numbers. $10 credit = ~6,500 SMS messages.</div></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 7: Push Notifications -->
+  <div class="section" id="sec7">
+    <div class="section-header" onclick="toggle('sec7')">
+      <div class="section-title">
+        <div class="section-icon" style="background:#fff7ed">🔔</div>
+        <div>
+          <div class="section-name">7. Push Notifications (Firebase FCM)</div>
+          <div class="section-meta">Browser and mobile push notifications</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="section-badge badge-optional">Optional</span>
+        <span class="chevron" id="chev7">▼</span>
+      </div>
+    </div>
+    <div class="section-body" id="body7">
+      <ul class="checklist">
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Create Firebase project <span class="check-tag tag-free">Free</span></div><div class="check-detail">Go to console.firebase.google.com → Create project → "Destiny E-Commerce"</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Enable Cloud Messaging</div><div class="check-detail">Project Settings → Cloud Messaging → generate Server Key (legacy) or create Service Account</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Download service account JSON</div><div class="check-detail">Project Settings → Service Accounts → Generate New Private Key. Set path as <span class="check-code">FIREBASE_SERVICE_ACCOUNT=/path/to/service-account.json</span></div></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 8: Image Storage -->
+  <div class="section" id="sec8">
+    <div class="section-header" onclick="toggle('sec8')">
+      <div class="section-title">
+        <div class="section-icon" style="background:#fdf4ff">🖼️</div>
+        <div>
+          <div class="section-name">8. Cloudinary Image Storage</div>
+          <div class="section-meta">Product photos, user avatars, vendor logos</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="section-badge badge-required">Required for uploads</span>
+        <span class="chevron" id="chev8">▼</span>
+      </div>
+    </div>
+    <div class="section-body" id="body8">
+      <ul class="checklist">
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Create Cloudinary account <span class="check-tag tag-free">25GB free</span></div><div class="check-detail">Register at cloudinary.com. Free plan: 25GB storage, 25GB bandwidth/month — sufficient for early stage.</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Get API credentials from Dashboard</div><div class="check-detail">Copy Cloud Name, API Key, and API Secret. Set <span class="check-code">CLOUDINARY_CLOUD_NAME</span>, <span class="check-code">CLOUDINARY_API_KEY</span>, <span class="check-code">CLOUDINARY_API_SECRET</span></div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Create upload preset (optional but recommended)</div><div class="check-detail">Settings → Upload → Add upload preset → Name it "destiny_products". Set transformation: auto quality, webp conversion.</div></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 9: Search -->
+  <div class="section" id="sec9">
+    <div class="section-header" onclick="toggle('sec9')">
+      <div class="section-title">
+        <div class="section-icon" style="background:#f0fdf4">🔍</div>
+        <div>
+          <div class="section-name">9. Elasticsearch (Optional)</div>
+          <div class="section-meta">Enhanced search with typo tolerance and relevance ranking</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="section-badge badge-optional">Optional — DB fallback built-in</span>
+        <span class="chevron" id="chev9">▼</span>
+      </div>
+    </div>
+    <div class="section-body" id="body9">
+      <div class="tip-box"><strong>Not required:</strong> Platform automatically falls back to PostgreSQL full-text search if Elasticsearch URL is not set.</div>
+      <ul class="checklist" style="margin-top:12px">
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Create Elastic Cloud cluster <span class="check-tag tag-free">14-day free trial</span></div><div class="check-detail">Register at elastic.co → Create deployment → Copy endpoint URL. Set <span class="check-code">ELASTICSEARCH_URL=https://your-cluster.es.io:9243</span></div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Alternative: Bonsai.io <span class="check-tag tag-free">Free 10k docs</span></div><div class="check-detail">Good free tier for early stage. bonsai.io → Clusters → Create → copy URL with credentials embedded.</div></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 10: Maps & Delivery -->
+  <div class="section" id="sec10">
+    <div class="section-header" onclick="toggle('sec10')">
+      <div class="section-title">
+        <div class="section-icon" style="background:#f0f9ff">📍</div>
+        <div>
+          <div class="section-name">10. Maps & GPS Tracking</div>
+          <div class="section-meta">Delivery agent location tracking</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="section-badge badge-optional">Optional</span>
+        <span class="chevron" id="chev10">▼</span>
+      </div>
+    </div>
+    <div class="section-body" id="body10">
+      <ul class="checklist">
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Enable Google Maps API</div><div class="check-detail">console.cloud.google.com → Enable Maps JavaScript API + Geocoding API → Create API Key. Set <span class="check-code">GOOGLE_MAPS_API_KEY</span> (server) and <span class="check-code">NEXT_PUBLIC_GOOGLE_MAPS_KEY</span> (frontend)</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Restrict API key to your domain</div><div class="check-detail">In Google Cloud Console → API Keys → restrict to HTTP referrers (your domain) to prevent unauthorized use</div></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 11: Security -->
+  <div class="section" id="sec11">
+    <div class="section-header" onclick="toggle('sec11')">
+      <div class="section-title">
+        <div class="section-icon" style="background:#fef2f2">🛡️</div>
+        <div>
+          <div class="section-name">11. Security Hardening</div>
+          <div class="section-meta">Production security checklist</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="section-badge badge-required">Required</span>
+        <span class="chevron" id="chev11">▼</span>
+      </div>
+    </div>
+    <div class="section-body" id="body11">
+      <ul class="checklist">
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Set NODE_ENV=production</div><div class="check-detail">Disables verbose Prisma logging, enables security middleware, hides stack traces in errors</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Use strong, unique secrets for all keys</div><div class="check-detail"><span class="check-tag tag-critical">Critical</span> JWT_SECRET min 64 chars. Never commit <span class="check-code">.env</span> to git.</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Configure CORS for your domain</div><div class="check-detail">Set <span class="check-code">CORS_ORIGIN=https://yourdomain.com</span> to restrict cross-origin requests</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Rate limiting is pre-configured</div><div class="check-detail">@nestjs/throttler limits to 10 requests/second per IP. Adjust TTL/LIMIT in throttler module if needed.</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Set up database backups</div><div class="check-detail">Supabase/Neon auto-backup daily. For self-hosted Postgres: set up pg_dump cron job or use Barman.</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Configure error monitoring (optional) <span class="check-tag tag-free">Free tier</span></div><div class="check-detail">Sentry.io: register → create project → copy DSN → set <span class="check-code">SENTRY_DSN</span></div></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 12: Environment Variables -->
+  <div class="section" id="sec12">
+    <div class="section-header" onclick="toggle('sec12')">
+      <div class="section-title">
+        <div class="section-icon" style="background:#f0fdf4">⚙️</div>
+        <div>
+          <div class="section-name">12. Complete .env Configuration</div>
+          <div class="section-meta">All environment variables for apps/api/.env</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="section-badge badge-required">Required</span>
+        <span class="chevron" id="chev12">▼</span>
+      </div>
+    </div>
+    <div class="section-body" id="body12">
+      <div class="env-block">
+        <button class="copy-btn" onclick="copyEnv()">Copy</button>
+        <code id="envCode"><span class="env-comment"># ===== DESTINY E-COMMERCE API — .env =====</span>
+<span class="env-comment"># Copy to apps/api/.env and fill in all values</span>
+
+<span class="env-comment"># App</span>
+<span class="env-key">NODE_ENV</span>=<span class="env-val">production</span>
+<span class="env-key">PORT</span>=<span class="env-val">5000</span>
+<span class="env-key">API_URL</span>=<span class="env-val">https://api.yourdomain.com</span>
+<span class="env-key">FRONTEND_URL</span>=<span class="env-val">https://yourdomain.com</span>
+<span class="env-key">CORS_ORIGIN</span>=<span class="env-val">https://yourdomain.com</span>
+
+<span class="env-comment"># Database</span>
+<span class="env-key">DATABASE_URL</span>=<span class="env-val">postgresql://user:password@host:5432/destiny_db?sslmode=require</span>
+
+<span class="env-comment"># JWT — generate with: openssl rand -base64 64</span>
+<span class="env-key">JWT_SECRET</span>=<span class="env-val">REPLACE_WITH_64_CHAR_RANDOM_STRING</span>
+<span class="env-key">JWT_REFRESH_SECRET</span>=<span class="env-val">REPLACE_WITH_DIFFERENT_64_CHAR_RANDOM_STRING</span>
+<span class="env-key">JWT_EXPIRES_IN</span>=<span class="env-val">15m</span>
+<span class="env-key">JWT_REFRESH_EXPIRES_IN</span>=<span class="env-val">7d</span>
+
+<span class="env-comment"># OAuth (optional)</span>
+<span class="env-key">GOOGLE_CLIENT_ID</span>=<span class="env-val">your-google-client-id.apps.googleusercontent.com</span>
+<span class="env-key">GOOGLE_CLIENT_SECRET</span>=<span class="env-val">your-google-client-secret</span>
+<span class="env-key">FACEBOOK_APP_ID</span>=<span class="env-val">your-facebook-app-id</span>
+<span class="env-key">FACEBOOK_APP_SECRET</span>=<span class="env-val">your-facebook-app-secret</span>
+
+<span class="env-comment"># Cloudinary</span>
+<span class="env-key">CLOUDINARY_CLOUD_NAME</span>=<span class="env-val">your-cloud-name</span>
+<span class="env-key">CLOUDINARY_API_KEY</span>=<span class="env-val">your-api-key</span>
+<span class="env-key">CLOUDINARY_API_SECRET</span>=<span class="env-val">your-api-secret</span>
+
+<span class="env-comment"># Email (SMTP)</span>
+<span class="env-key">SMTP_HOST</span>=<span class="env-val">smtp.sendgrid.net</span>
+<span class="env-key">SMTP_PORT</span>=<span class="env-val">587</span>
+<span class="env-key">SMTP_USER</span>=<span class="env-val">apikey</span>
+<span class="env-key">SMTP_PASS</span>=<span class="env-val">SG.your-sendgrid-api-key</span>
+<span class="env-key">SMTP_FROM_EMAIL</span>=<span class="env-val">hello@destiny-ecommerce.com</span>
+<span class="env-key">SMTP_FROM_NAME</span>=<span class="env-val">Destiny E-Commerce</span>
+
+<span class="env-comment"># SMS — Africa's Talking (optional)</span>
+<span class="env-key">AT_API_KEY</span>=<span class="env-val">your-africastalking-api-key</span>
+<span class="env-key">AT_USERNAME</span>=<span class="env-val">your-username</span>
+<span class="env-key">AT_SENDER_ID</span>=<span class="env-val">Destiny</span>
+
+<span class="env-comment"># Firebase Push Notifications (optional)</span>
+<span class="env-key">FIREBASE_SERVICE_ACCOUNT</span>=<span class="env-val">/path/to/firebase-service-account.json</span>
+
+<span class="env-comment"># MTN MoMo API (optional — manual mode works without this)</span>
+<span class="env-key">MTN_MOMO_API_KEY</span>=<span class="env-val">your-mtn-momo-api-key</span>
+<span class="env-key">MTN_MOMO_SUBSCRIPTION_KEY</span>=<span class="env-val">your-subscription-key</span>
+<span class="env-key">MTN_MOMO_ENVIRONMENT</span>=<span class="env-val">production</span>
+
+<span class="env-comment"># Orange Money API (optional — manual mode works without this)</span>
+<span class="env-key">ORANGE_CLIENT_ID</span>=<span class="env-val">your-orange-client-id</span>
+<span class="env-key">ORANGE_CLIENT_SECRET</span>=<span class="env-val">your-orange-client-secret</span>
+
+<span class="env-comment"># Elasticsearch (optional — DB fallback built-in)</span>
+<span class="env-key">ELASTICSEARCH_URL</span>=<span class="env-val">https://your-cluster.es.io:9243</span>
+
+<span class="env-comment"># Redis (optional — for caching)</span>
+<span class="env-key">REDIS_URL</span>=<span class="env-val">redis://default:password@redis-host:6379</span>
+
+<span class="env-comment"># Maps (optional)</span>
+<span class="env-key">GOOGLE_MAPS_API_KEY</span>=<span class="env-val">your-maps-api-key</span></code>
+      </div>
+      <div class="tip-box" style="margin-top:12px"><strong>Frontend .env:</strong> Create <span class="check-code">apps/web/.env.local</span> with: <span class="check-code">NEXT_PUBLIC_API_URL=https://api.yourdomain.com/api/v1</span></div>
+    </div>
+  </div>
+
+  <!-- SECTION 13: Deployment -->
+  <div class="section" id="sec13">
+    <div class="section-header" onclick="toggle('sec13')">
+      <div class="section-title">
+        <div class="section-icon" style="background:#f0f9ff">🚢</div>
+        <div>
+          <div class="section-name">13. Deployment Steps</div>
+          <div class="section-meta">Railway (API) + Vercel (Frontend)</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="section-badge badge-required">Required</span>
+        <span class="chevron" id="chev13">▼</span>
+      </div>
+    </div>
+    <div class="section-body" id="body13">
+      <ul class="checklist">
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Deploy API to Railway</div><div class="check-detail">railway.app → New Project → Deploy from GitHub → select repo → set root dir to <span class="check-code">destiny-ecommerce/apps/api</span> → add all env vars → deploy</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Run migrations on Railway</div><div class="check-detail">Railway shell or build command: <span class="check-code">npx prisma migrate deploy && node dist/main</span></div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Deploy frontend to Vercel</div><div class="check-detail">vercel.com → New Project → Import GitHub → set root dir to <span class="check-code">destiny-ecommerce/apps/web</span> → add env vars → deploy</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Set NEXT_PUBLIC_API_URL on Vercel</div><div class="check-detail">Vercel project → Settings → Environment Variables → add <span class="check-code">NEXT_PUBLIC_API_URL=https://your-railway-api-url/api/v1</span></div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Verify health endpoint</div><div class="check-detail">Visit <span class="check-code">https://api.yourdomain.com/api/v1/health</span> — should return <span class="check-code">{"status":"ok"}</span></div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Test authentication flow</div><div class="check-detail">Register → login → check JWT in localStorage → verify admin redirect works</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Test end-to-end order flow</div><div class="check-detail">Browse → Add to cart → Checkout → Select MTN/Orange → Place order → Submit payment proof → Admin approves</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Test email notifications</div><div class="check-detail">Place order and verify confirmation email arrives. Check spam folder first time.</div></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 14: Business Operations -->
+  <div class="section" id="sec14">
+    <div class="section-header" onclick="toggle('sec14')">
+      <div class="section-title">
+        <div class="section-icon" style="background:#fdf4ff">💼</div>
+        <div>
+          <div class="section-name">14. Business Setup</div>
+          <div class="section-meta">Initial data, legal pages, and launch prep</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="section-badge badge-required">Before Launch</span>
+        <span class="chevron" id="chev14">▼</span>
+      </div>
+    </div>
+    <div class="section-body" id="body14">
+      <ul class="checklist">
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Create admin account and set role to SUPER_ADMIN</div><div class="check-detail">Register via app → update in DB: <span class="check-code">UPDATE users SET role='SUPER_ADMIN' WHERE email='admin@yourdomain.com';</span></div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Add product categories via Admin → (seed or UI)</div><div class="check-detail">Smartphones, Laptops, Audio, Accessories, Smart Home, Gaming, Cameras</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Add brands</div><div class="check-detail">Samsung, Apple, Huawei, Tecno, Itel, Xiaomi, Sony, JBL, etc.</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Upload at least 10 products with images</div><div class="check-detail">Including price in FCFA, SKU, stock quantity. Mark 4–6 as featured, 3–4 as flash sale.</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Add homepage banners</div><div class="check-detail">Create 3–5 banner records in DB with image URLs from Cloudinary</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Create Terms of Service page</div><div class="check-detail">Add <span class="check-code">apps/web/src/app/terms/page.tsx</span> with your T&C</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Create Privacy Policy page</div><div class="check-detail">Add <span class="check-code">apps/web/src/app/privacy/page.tsx</span> — required by GDPR-adjacent laws</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Create first coupon code</div><div class="check-detail">Admin → Marketing → Create coupon: <span class="check-code">WELCOME10</span> — 10% off first order</div></div></li>
+        <li><div class="check-box" onclick="check(this)"></div><div class="check-content"><div class="check-title">Test payment flow end-to-end</div><div class="check-detail">Use real MTN/Orange numbers, send 500 FCFA test payment, verify admin approval workflow</div></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 15: Monthly Cost Estimate -->
+  <div class="section" id="sec15">
+    <div class="section-header" onclick="toggle('sec15')">
+      <div class="section-title">
+        <div class="section-icon" style="background:#f0fdf4">💰</div>
+        <div>
+          <div class="section-name">15. Monthly Cost Estimate</div>
+          <div class="section-meta">What you'll spend at different stages</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="chevron" id="chev15">▼</span>
+      </div>
+    </div>
+    <div class="section-body" id="body15">
+      <table class="cost-table">
+        <thead>
+          <tr><th>Service</th><th>Free Tier</th><th>Startup (0–100 orders/mo)</th><th>Growth (500+ orders/mo)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Database (Neon/Supabase)</td><td>✅ Free 3GB</td><td>$0–5/mo</td><td>$25–50/mo</td></tr>
+          <tr><td>API Hosting (Railway)</td><td>500hrs free</td><td>$5/mo</td><td>$20–50/mo</td></tr>
+          <tr><td>Frontend (Vercel)</td><td>✅ Free hobby</td><td>$0/mo</td><td>$20/mo (Pro)</td></tr>
+          <tr><td>Domain (.com)</td><td>—</td><td>$1/mo (~$12/yr)</td><td>$1/mo</td></tr>
+          <tr><td>Email (SendGrid)</td><td>100/day free</td><td>$0–15/mo</td><td>$15–90/mo</td></tr>
+          <tr><td>SMS (Africa's Talking)</td><td>Sandbox free</td><td>$5–10/mo</td><td>$20–50/mo</td></tr>
+          <tr><td>Images (Cloudinary)</td><td>✅ 25GB free</td><td>$0/mo</td><td>$0–45/mo</td></tr>
+          <tr><td>Redis (Upstash)</td><td>✅ 10k cmd/day</td><td>$0/mo</td><td>$10/mo</td></tr>
+          <tr><td>Search (Elasticsearch)</td><td>14-day trial</td><td>$0 (DB fallback)</td><td>$16/mo (Bonsai)</td></tr>
+          <tr class="total-row"><td>TOTAL ESTIMATE</td><td>$0/mo (mostly free)</td><td>~$11–36/mo</td><td>~$100–280/mo</td></tr>
+        </tbody>
+      </table>
+      <div class="warn-box" style="margin-top:12px">
+        <strong>Payment Gateway Note:</strong> MTN MoMo API and Orange Money API are <strong>free to use</strong> — operators take their transaction fee directly from the customer. No monthly charges for payment APIs.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Sticky action bar -->
+<div class="actions-bar" id="actionsBar">
+  <div class="counter">
+    <strong id="doneCount">0</strong> / <span id="totalCountBar">0</span> tasks completed
+  </div>
+  <div style="display:flex;gap:10px">
+    <button class="btn-primary" onclick="expandAll()">Expand All</button>
+    <button class="btn-primary" onclick="collapseAll()">Collapse All</button>
+    <button class="btn-primary" onclick="resetAll()">Reset</button>
+  </div>
+</div>
+
+<script>
+const TOTAL_SECTIONS = 15;
+let checks = JSON.parse(localStorage.getItem('destinyChecks') || '{}');
+
+function saveChecks() { localStorage.setItem('destinyChecks', JSON.stringify(checks)); }
+
+function check(el) {
+  const id = el.dataset.id || (() => { el.dataset.id = Math.random().toString(36).slice(2); return el.dataset.id; })();
+  if (el.classList.contains('checked')) { el.classList.remove('checked'); checks[id] = false; }
+  else { el.classList.add('checked'); checks[id] = true; }
+  saveChecks(); updateProgress();
+}
+
+function restoreChecks() {
+  document.querySelectorAll('.check-box').forEach(el => {
+    const id = el.dataset.id;
+    if (id && checks[id]) el.classList.add('checked');
+  });
+}
+
+function updateProgress() {
+  const total = document.querySelectorAll('.check-box').length;
+  const done = document.querySelectorAll('.check-box.checked').length;
+  const pct = total > 0 ? Math.round(done / total * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('totalCount').textContent = total + ' tasks';
+  document.getElementById('doneCount').textContent = done;
+  document.getElementById('totalCountBar').textContent = total;
+}
+
+function toggle(id) {
+  const body = document.getElementById('body' + id.replace('sec',''));
+  const chev = document.getElementById('chev' + id.replace('sec',''));
+  if (body.classList.contains('collapsed')) {
+    body.classList.remove('collapsed');
+    chev.classList.remove('open');
+  } else {
+    body.classList.add('collapsed');
+    chev.classList.add('open');
+  }
+}
+
+function expandAll() {
+  for (let i = 1; i <= TOTAL_SECTIONS; i++) {
+    const body = document.getElementById('body' + i);
+    const chev = document.getElementById('chev' + i);
+    if (body) { body.classList.remove('collapsed'); chev.classList.remove('open'); }
+  }
+}
+
+function collapseAll() {
+  for (let i = 1; i <= TOTAL_SECTIONS; i++) {
+    const body = document.getElementById('body' + i);
+    const chev = document.getElementById('chev' + i);
+    if (body) { body.classList.add('collapsed'); chev.classList.add('open'); }
+  }
+}
+
+function resetAll() {
+  if (!confirm('Reset all checkboxes?')) return;
+  checks = {};
+  saveChecks();
+  document.querySelectorAll('.check-box.checked').forEach(el => el.classList.remove('checked'));
+  updateProgress();
+}
+
+function copyEnv() {
+  const code = document.getElementById('envCode');
+  const text = code.innerText;
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.setAttribute('readonly', '');
+  ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;';
+  document.body.appendChild(ta);
+  ta.focus(); ta.select();
+  try { document.execCommand('copy'); } catch (e) {}
+  document.body.removeChild(ta);
+  const btn = document.querySelector('.copy-btn');
+  btn.textContent = 'Copied!';
+  setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+}
+
+// Init: assign persistent IDs to all checkboxes
+document.querySelectorAll('.check-box').forEach((el, i) => {
+  el.dataset.id = 'check_' + i;
+});
+restoreChecks();
+updateProgress();
+</script>
+</body>
+</html>

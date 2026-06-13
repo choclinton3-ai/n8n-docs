@@ -223,15 +223,15 @@ export class AdminService {
   }
 
   async getSettings() {
-    const settings = await this.prisma.siteSettings?.findFirst?.().catch(() => null)
+    const settings = await this.prisma.siteSettings.findFirst().catch(() => null)
     return settings || {}
   }
 
   async updateSettings(dto: any) {
-    const existing = await this.prisma.siteSettings?.findFirst?.().catch(() => null)
+    const existing = await this.prisma.siteSettings.findFirst().catch(() => null)
     if (existing) {
       return this.prisma.siteSettings.update({ where: { id: existing.id }, data: dto })
     }
-    return dto
+    return this.prisma.siteSettings.create({ data: dto }).catch(() => dto)
   }
 }

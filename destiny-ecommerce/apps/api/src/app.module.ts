@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common'
+import { AppController } from './app.controller'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { ThrottlerModule } from '@nestjs/throttler'
 import { EventEmitterModule } from '@nestjs/event-emitter'
@@ -23,13 +24,13 @@ import { SupportModule } from './support/support.module'
 import { SearchModule } from './search/search.module'
 
 @Module({
+  controllers: [AppController],
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
     ThrottlerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        ttl: 60,
-        limit: config.get('RATE_LIMIT', 100),
+        throttlers: [{ ttl: 60000, limit: config.get('RATE_LIMIT', 100) }],
       }),
     }),
     EventEmitterModule.forRoot(),

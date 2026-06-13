@@ -660,3 +660,27 @@ model AuditLog {
 
   @@map("audit_logs")
 }
+
+// ===================== SITE SETTINGS =====================
+
+model SiteSettings {
+  id                       String   @id @default(cuid())
+  storeName                String   @default("Destiny E-Commerce")
+  storeEmail               String   @default("hello@destiny-ecommerce.com")
+  storePhone               String   @default("+237 653 526 767")
+  storeAddress             String   @default("Cameroon")
+  currency                 String   @default("FCFA")
+  timezone                 String   @default("Africa/Douala")
+  minOrderAmount           Float    @default(1000)
+  freeShippingThreshold    Float    @default(50000)
+  defaultShippingFee       Float    @default(2000)
+  mtnMomoEnabled           Boolean  @default(true)
+  orangeMoneyEnabled       Boolean  @default(true)
+  cashOnDeliveryEnabled    Boolean  @default(false)
+  emailNotificationsEnabled Boolean @default(true)
+  smsNotificationsEnabled  Boolean  @default(false)
+  maintenanceMode          Boolean  @default(false)
+  updatedAt                DateTime @updatedAt
+
+  @@map("site_settings")
+}
