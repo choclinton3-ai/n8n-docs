@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Destiny E-Commerce — Mandatory Integration Checklist</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f8f9fa;color:#1a1a2e;line-height:1.6;font-size:14px}
+.hero{background:linear-gradient(135deg,#FF007F,#8B00FF);color:white;padding:40px 24px;text-align:center}
+.hero h1{font-size:2rem;font-weight:900;margin-bottom:6px}
+.hero p{opacity:.85;font-size:.95rem;margin-bottom:14px}
+.hero-badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.hb{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 14px;font-size:.72rem;font-weight:700}
+.sticky-bar{position:sticky;top:0;background:white;border-bottom:2px solid #FF007F;padding:10px 24px;z-index:100;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,.1)}
+.sticky-bar .left{font-size:.8rem;color:#64748b}
+.sticky-bar .left strong{color:#FF007F;font-size:1rem}
+.btn-copy{background:linear-gradient(135deg,#FF007F,#8B00FF);color:white;border:none;border-radius:8px;padding:8px 18px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .15s}
+.btn-copy:hover{opacity:.9}
+.btn-copy.ok{background:linear-gradient(135deg,#10b981,#059669)}
+.btn-print{background:white;color:#64748b;border:1px solid #e2e8f0;border-radius:8px;padding:7px 14px;font-size:.78rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn-print:hover{border-color:#FF007F;color:#FF007F}
+.progress-wrap{background:white;border-bottom:1px solid #e2e8f0;padding:12px 24px}
+.progress-wrap .inner{max-width:1200px;margin:0 auto}
+.progress-track{background:#f1f5f9;border-radius:6px;height:10px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#FF007F,#8B00FF);border-radius:6px;transition:width .4s}
+.progress-labels{display:flex;justify-content:space-between;font-size:.72rem;color:#94a3b8;margin-top:4px}
+.container{max-width:1200px;margin:0 auto;padding:24px}
+.section{background:white;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:20px;overflow:hidden;border:1px solid #e2e8f0}
+.sec-header{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;cursor:pointer;border-bottom:1px solid #f1f5f9;user-select:none}
+.sec-header:hover{background:#fafafa}
+.sec-left{display:flex;align-items:center;gap:12px}
+.sec-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.sec-name{font-size:1rem;font-weight:800;color:#111827}
+.sec-sub{font-size:.75rem;color:#94a3b8;margin-top:1px}
+.sec-right{display:flex;gap:8px;align-items:center}
+.pri-badge{font-size:.65rem;font-weight:700;padding:3px 9px;border-radius:10px;white-space:nowrap}
+.pri-req{background:#fee2e2;color:#dc2626}
+.pri-rec{background:#fef3c7;color:#d97706}
+.pri-opt{background:#f0fdf4;color:#16a34a}
+.chevron{font-size:.7rem;color:#94a3b8;transition:transform .2s}
+.chevron.open{transform:rotate(180deg)}
+.sec-body{padding:8px 22px 22px;display:block}
+.sec-body.hidden{display:none}
+.req-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:.82rem}
+.req-table th{text-align:left;padding:9px 12px;background:#f8fafc;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:#64748b;font-weight:700;border-bottom:1px solid #e2e8f0}
+.req-table td{padding:10px 12px;border-bottom:1px solid #f1f5f9;vertical-align:top;color:#475569}
+.req-table tr:hover td{background:#fafafa}
+.req-table td:first-child{font-weight:700;color:#111827;white-space:nowrap}
+.req-table td:last-child{font-weight:700}
+.p-critical{color:#dc2626}
+.p-high{color:#d97706}
+.p-med{color:#2563eb}
+.p-low{color:#16a34a}
+.check-list{list-style:none;margin-top:10px}
+.check-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #f1f5f9}
+.check-item:last-child{border-bottom:none}
+.cb{width:20px;height:20px;border:2px solid #e2e8f0;border-radius:5px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;margin-top:1px}
+.cb.done{background:#FF007F;border-color:#FF007F}
+.cb.done::after{content:'✓';color:white;font-size:.7rem;font-weight:800}
+.ci{flex:1}
+.ci-title{font-size:.88rem;font-weight:700;color:#111827}
+.ci-purpose{font-size:.78rem;color:#64748b;margin-top:2px}
+.ci-detail{font-size:.76rem;color:#94a3b8;margin-top:4px;line-height:1.6}
+.ci-env{margin-top:6px}
+.env-var{display:inline-block;font-family:monospace;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:4px;padding:2px 7px;font-size:.73rem;color:#0f172a;margin:2px 2px 2px 0}
+.ci-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.tag{font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:8px}
+.t-free{background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0}
+.t-paid{background:#fef3c7;color:#d97706;border:1px solid #fde68a}
+.t-critical{background:#fee2e2;color:#dc2626;border:1px solid #fecaca}
+.t-req{background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe}
+.cost-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px;margin-top:12px}
+.cost-title{font-size:.75rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.cost-row{display:flex;justify-content:space-between;font-size:.8rem;padding:4px 0;border-bottom:1px solid #f1f5f9}
+.cost-row:last-child{border-bottom:none;font-weight:700;color:#111827;padding-top:8px}
+.code{font-family:monospace;background:#f1f5f9;padding:1px 5px;border-radius:3px;font-size:.78rem;color:#111827}
+.alert{border-radius:10px;padding:12px 16px;margin:10px 0;font-size:.8rem;line-height:1.6}
+.alert-info{background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8}
+.alert-warn{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412}
+.alert-ok{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
+.alert strong{font-weight:700}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+@media(max-width:640px){.two-col{grid-template-columns:1fr}}
+.inner-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px}
+.inner-card h4{font-size:.82rem;font-weight:700;color:#111827;margin-bottom:8px}
+.inner-card ul{list-style:none;padding:0}
+.inner-card ul li{font-size:.78rem;color:#64748b;padding:3px 0;padding-left:12px;position:relative}
+.inner-card ul li::before{content:'•';position:absolute;left:0;color:#FF007F}
+.launch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+@media(max-width:640px){.launch-grid{grid-template-columns:1fr}}
+.launch-card{border-radius:10px;padding:14px}
+.lc-req{background:#fee2e2;border:1px solid #fecaca}
+.lc-rec{background:#fef3c7;border:1px solid #fde68a}
+.lc-opt{background:#f0fdf4;border:1px solid #bbf7d0}
+.launch-card h4{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.lc-req h4{color:#dc2626}
+.lc-rec h4{color:#d97706}
+.lc-opt h4{color:#16a34a}
+.launch-card ul{list-style:none;padding:0}
+.launch-card ul li{font-size:.76rem;color:#374151;padding:3px 0;display:flex;align-items:flex-start;gap:6px}
+.launch-card ul li::before{content:'→';color:#94a3b8;flex-shrink:0;font-size:.7rem;margin-top:3px}
+.final-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:10px}
+@media(max-width:640px){.final-grid{grid-template-columns:1fr}}
+.final-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px}
+.final-card h4{font-size:.82rem;font-weight:800;color:#111827;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #e2e8f0}
+.fc-item{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:.78rem;color:#475569}
+.fc-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot-red{background:#ef4444}
+.dot-amber{background:#f59e0b}
+.dot-green{background:#22c55e}
+.cost-final-table{width:100%;border-collapse:collapse;font-size:.82rem;margin-top:10px}
+.cost-final-table th{text-align:left;padding:8px 12px;background:#f8fafc;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:#64748b;font-weight:700}
+.cost-final-table td{padding:10px 12px;border-bottom:1px solid #f1f5f9;color:#475569}
+.cost-final-table .total-row td{font-weight:700;color:#111827;background:#f1f5f9;border-top:2px solid #e2e8f0}
+.readiness-bar{margin-top:16px}
+.rb-label{display:flex;justify-content:space-between;font-size:.82rem;color:#64748b;margin-bottom:6px}
+.rb-label strong{color:#FF007F;font-size:1.1rem}
+.rb-track{background:#f1f5f9;border-radius:8px;height:16px;overflow:hidden}
+.rb-fill{height:100%;background:linear-gradient(90deg,#FF007F,#8B00FF);border-radius:8px}
+footer{background:#f1f5f9;border-top:1px solid #e2e8f0;padding:24px;text-align:center;color:#94a3b8;font-size:.78rem;margin-top:32px}
+footer strong{color:#FF007F}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>🚀 Destiny E-Commerce</h1>
+  <p>Mandatory Integration &amp; Deployment Requirements Checklist</p>
+  <div class="hero-badges">
+    <span class="hb">15 Sections</span>
+    <span class="hb">Cameroon Market</span>
+    <span class="hb">MTN MoMo · Orange Money</span>
+    <span class="hb">FCFA</span>
+    <span class="hb">Production Readiness Guide</span>
+  </div>
+</div>
+
+<div class="sticky-bar">
+  <div class="left"><strong id="doneN">0</strong> / <span id="totalN">0</span> requirements completed</div>
+  <div style="display:flex;gap:8px">
+    <button class="btn-print" onclick="window.print()">🖨️ Print</button>
+    <button class="btn-copy" id="cpBtn" onclick="copyText()">📋 Copy Checklist</button>
+  </div>
+</div>
+
+<div class="progress-wrap">
+  <div class="inner">
+    <div class="progress-track"><div class="progress-fill" id="pFill" style="width:0%"></div></div>
+    <div class="progress-labels"><span id="pLeft">0 completed</span><span id="pPct">0%</span><span id="pRight">0 total</span></div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- SECTION 1: DOMAIN & HOSTING -->
+<div class="section" id="s1">
+<div class="sec-header" onclick="tog(1)">
+  <div class="sec-left"><div class="sec-icon" style="background:#eff6ff">🌐</div><div><div class="sec-name">1. Domain &amp; Hosting</div><div class="sec-sub">Where your platform lives on the internet</div></div></div>
+  <div class="sec-right"><span class="pri-badge pri-req">Required</span><span class="chevron" id="c1">▼</span></div>
+</div>
+<div class="sec-body" id="b1">
+<table class="req-table">
+<thead><tr><th>Requirement</th><th>Purpose</th><th>Recommended Option</th><th>Free Tier</th><th>Paid</th><th>Priority</th></tr></thead>
+<tbody>
+<tr><td>Domain Name</td><td>Professional URL for your store</td><td>Namecheap / GoDaddy</td><td>None</td><td>$8–15/yr</td><td class="p-critical">CRITICAL</td></tr>
+<tr><td>SSL Certificate</td><td>Secure HTTPS — required for payments</td><td>Let's Encrypt (auto via Vercel/Railway)</td><td>Free (auto)</td><td>Free</td><td class="p-critical">CRITICAL</td></tr>
+<tr><td>DNS Configuration</td><td>Point domain to hosting providers</td><td>Your registrar's DNS panel</td><td>Free</td><td>Free</td><td class="p-critical">CRITICAL</td></tr>
+<tr><td>Frontend Hosting</td><td>Serve the Next.js web app</td><td>Vercel (built for Next.js)</td><td>Hobby: Free</td><td>Pro: $20/mo</td><td class="p-critical">CRITICAL</td></tr>
+<tr><td>Backend API Hosting</td><td>Run the NestJS API server</td><td>Railway</td><td>$5 credit/mo</td><td>$5–20/mo</td><td class="p-critical">CRITICAL</td></tr>
+<tr><td>Database Hosting</td><td>PostgreSQL database server</td><td>Neon / Supabase</td><td>3GB / 500MB free</td><td>$19–25/mo</td><td class="p-critical">CRITICAL</td></tr>
+<tr><td>File Storage</td><td>Product images, avatars, banners</td><td>Cloudinary</td><td>25GB free</td><td>$89/mo (Plus)</td><td class="p-high">HIGH</td></tr>
+</tbody>
+</table>
+
+<div class="two-col" style="margin-top:14px">
+<div class="inner-card">
+<h4>Vercel Setup (Frontend)</h4>
+<ul>
+<li>Go to vercel.com → New Project</li>
+<li>Import from GitHub → select repo</li>
+<li>Root directory: <span class="code">destiny-ecommerce/apps/web</span></li>
+<li>Add env var: <span class="code">NEXT_PUBLIC_API_URL</span></li>
+<li>Deploy → get URL → add custom domain</li>
+<li>SSL auto-provisioned by Vercel</li>
+</ul>
+</div>
+<div class="inner-card">
+<h4>Railway Setup (API)</h4>
+<ul>
+<li>Go to railway.app → New Project</li>
+<li>Deploy from GitHub</li>
+<li>Root directory: <span class="code">destiny-ecommerce/apps/api</span></li>
+<li>Add all env vars from .env.example</li>
+<li>Start command: <span class="code">npx prisma migrate deploy && node dist/main</span></li>
+<li>Add custom domain → SSL auto</li>
+</ul>
+</div>
+</div>
+
+<div class="alert alert-info">
+<strong>DNS Setup:</strong> In your domain registrar, add a CNAME record pointing <span class="code">www</span> → your Vercel URL, and another CNAME pointing <span class="code">api</span> → your Railway URL. Vercel/Railway handle SSL automatically via Let's Encrypt.
+</div>
+
+<div class="ci-env" style="margin-top:10px">
+<strong style="font-size:.78rem;color:#64748b;display:block;margin-bottom:4px">ENVIRONMENT VARIABLES</strong>
+<span class="env-var">FRONTEND_URL=https://yourdomain.com</span>
+<span class="env-var">API_URL=https://api.yourdomain.com</span>
+<span class="env-var">CORS_ORIGIN=https://yourdomain.com</span>
+<span class="env-var">NEXT_PUBLIC_API_URL=https://api.yourdomain.com/api/v1</span>
+</div>
+
+<ul class="check-list" style="margin-top:14px">
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Register domain name (.com or .cm)</div><div class="ci-detail">Purchase from Namecheap ($8.88/yr for .com) or GoDaddy. Recommended: destiny-ecommerce.com or destinyshop.cm</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Create Vercel account and deploy frontend</div><div class="ci-detail">vercel.com → sign up with GitHub → import repo → configure root dir and env vars → deploy</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Create Railway account and deploy API</div><div class="ci-detail">railway.app → new project → deploy from GitHub → add env vars → deploy</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Configure DNS records</div><div class="ci-detail">Add CNAME: @ or www → Vercel URL. Add CNAME: api → Railway URL. TTL: 300</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Verify SSL certificates are active</div><div class="ci-detail">Visit https://yourdomain.com and https://api.yourdomain.com — green padlock must appear. Test: https://api.yourdomain.com/api/v1/health → {"status":"ok"}</div></div></li>
+</ul>
+</div>
+</div>
+
+<!-- SECTION 2: DATABASE -->
+<div class="section" id="s2">
+<div class="sec-header" onclick="tog(2)">
+  <div class="sec-left"><div class="sec-icon" style="background:#f0fdf4">🗄️</div><div><div class="sec-name">2. Database Requirements</div><div class="sec-sub">PostgreSQL setup, migrations, backups, monitoring</div></div></div>
+  <div class="sec-right"><span class="pri-badge pri-req">Required</span><span class="chevron" id="c2">▼</span></div>
+</div>
+<div class="sec-body" id="b2">
+<table class="req-table">
+<thead><tr><th>Requirement</th><th>Purpose</th><th>Option</th><th>Free</th><th>Paid</th><th>Priority</th></tr></thead>
+<tbody>
+<tr><td>PostgreSQL Database</td><td>Primary data store (25 models)</td><td>Neon (recommended)</td><td>3GB, 1 project</td><td>$19/mo (Pro)</td><td class="p-critical">CRITICAL</td></tr>
+<tr><td>Database Migrations</td><td>Create all 25 tables</td><td>Prisma Migrate (built-in)</td><td>Free</td><td>Free</td><td class="p-critical">CRITICAL</td></tr>
+<tr><td>Connection Pooling</td><td>Handle concurrent connections</td><td>Neon Serverless (built-in) / PgBouncer</td><td>Free (Neon)</td><td>Included</td><td class="p-high">HIGH</td></tr>
+<tr><td>Database Backups</td><td>Recover from data loss</td><td>Neon/Supabase (auto-daily)</td><td>7-day history</td><td>30-day: $19/mo</td><td class="p-high">HIGH</td></tr>
+<tr><td>Redis Cache</td><td>Session cache, rate limiting</td><td>Upstash Redis</td><td>10k cmd/day</td><td>$10/mo</td><td class="p-med">MEDIUM</td></tr>
+<tr><td>DB Monitoring</td><td>Query performance, slow logs</td><td>Neon dashboard / pganalyze</td><td>Basic (free)</td><td>$29/mo</td><td class="p-low">LOW</td></tr>
+</tbody>
+</table>
+
+<div class="alert alert-warn" style="margin-top:12px">
+<strong>⚠️ MUST DO FIRST:</strong> The API cannot start without a valid DATABASE_URL. Run migrations before deploying: <span class="code">npx prisma migrate deploy</span> then <span class="code">npx prisma generate</span>
+</div>
+
+<div class="inner-card" style="margin-top:12px">
+<h4>Neon Setup (Recommended)</h4>
+<ul>
+<li>Go to neon.tech → Sign up → Create project "destiny-ecommerce"</li>
+<li>Select region closest to Cameroon: Europe West (Frankfurt) or US East</li>
+<li>Copy connection string → set as DATABASE_URL</li>
+<li>Format: <span class="code">postgresql://user:pass@ep-xxx.us-east-2.aws.neon.tech/destiny_db?sslmode=require</span></li>
+<li>Enable connection pooling (Neon dashboard → Connection Details → Pooled connection)</li>
+</ul>
+</div>
+
+<div class="ci-env" style="margin-top:10px">
+<strong style="font-size:.78rem;color:#64748b;display:block;margin-bottom:4px">ENVIRONMENT VARIABLES</strong>
+<span class="env-var">DATABASE_URL=postgresql://user:pass@host:5432/db?sslmode=require</span>
+<span class="env-var">REDIS_URL=redis://default:pass@host:6379</span>
+</div>
+
+<ul class="check-list" style="margin-top:14px">
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Create Neon/Supabase PostgreSQL database</div><div class="ci-detail">neon.tech or supabase.com → create project → copy connection string</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Set DATABASE_URL in API environment</div><div class="ci-detail">Add to Railway env vars and local apps/api/.env</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Run Prisma migrations</div><div class="ci-detail"><span class="code">cd apps/api && npx prisma migrate deploy && npx prisma generate</span></div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Verify all 25 tables created</div><div class="ci-detail">Connect with psql or Neon dashboard → check tables: users, products, orders, payments, etc.</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Create Upstash Redis (optional)</div><div class="ci-detail">upstash.com → create database → copy REST URL → set REDIS_URL</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Confirm daily backups are enabled</div><div class="ci-detail">Neon/Supabase auto-backup. For self-hosted: set up pg_dump cron job</div></div></li>
+</ul>
+</div>
+</div>
+
+<!-- SECTION 3: AUTHENTICATION -->
+<div class="section" id="s3">
+<div class="sec-header" onclick="tog(3)">
+  <div class="sec-left"><div class="sec-icon" style="background:#fdf4ff">🔐</div><div><div class="sec-name">3. Authentication Requirements</div><div class="sec-sub">JWT, refresh tokens, OAuth providers</div></div></div>
+  <div class="sec-right"><span class="pri-badge pri-req">Required</span><span class="chevron" id="c3">▼</span></div>
+</div>
+<div class="sec-body" id="b3">
+<table class="req-table">
+<thead><tr><th>Requirement</th><th>Purpose</th><th>Status</th><th>Action Needed</th><th>Priority</th></tr></thead>
+<tbody>
+<tr><td>JWT Secret</td><td>Sign access tokens (15m expiry)</td><td style="color:#d97706">⚠️ Must generate</td><td>openssl rand -base64 64</td><td class="p-critical">CRITICAL</td></tr>
+<tr><td>JWT Refresh Secret</td><td>Sign refresh tokens (7d expiry)</td><td style="color:#d97706">⚠️ Must generate</td><td>openssl rand -base64 64 (different)</td><td class="p-critical">CRITICAL</td></tr>
+<tr><td>SUPER_ADMIN account</td><td>Access admin panel</td><td style="color:#d97706">⚠️ Must create</td><td>Register + UPDATE role in DB</td><td class="p-critical">CRITICAL</td></tr>
+<tr><td>Google OAuth</td><td>One-click Google login</td><td style="color:#2563eb">Optional</td><td>Google Cloud Console setup</td><td class="p-med">MEDIUM</td></tr>
+<tr><td>Facebook OAuth</td><td>One-click Facebook login</td><td style="color:#2563eb">Optional</td><td>Facebook Developer Console</td><td class="p-low">LOW</td></tr>
+<tr><td>Email Verification</td><td>Confirm user email addresses</td><td style="color:#2563eb">Optional</td><td>Requires SMTP configured</td><td class="p-med">MEDIUM</td></tr>
+</tbody>
+</table>
+
+<div class="two-col" style="margin-top:12px">
+<div class="inner-card">
+<h4>Google OAuth Setup</h4>
+<ul>
+<li>Go to console.cloud.google.com</li>
+<li>Create project → APIs &amp; Services → Credentials</li>
+<li>Create OAuth 2.0 Client ID (Web application)</li>
+<li>Authorized redirect URI: <span class="code">https://api.yourdomain.com/api/v1/auth/google/callback</span></li>
+<li>Copy Client ID and Client Secret</li>
+<li>Enable Google+ API (People API)</li>
+</ul>
+</div>
+<div class="inner-card">
+<h4>Facebook OAuth Setup</h4>
+<ul>
+<li>Go to developers.facebook.com</li>
+<li>Create App → Consumer → Add Facebook Login</li>
+<li>Valid OAuth Redirect URI: <span class="code">https://api.yourdomain.com/api/v1/auth/facebook/callback</span></li>
+<li>Copy App ID and App Secret</li>
+<li>Add your domain to App Domains</li>
+<li>Submit for App Review to go live</li>
+</ul>
+</div>
+</div>
+
+<div class="ci-env" style="margin-top:10px">
+<strong style="font-size:.78rem;color:#64748b;display:block;margin-bottom:4px">ENVIRONMENT VARIABLES</strong>
+<span class="env-var">JWT_SECRET=64-char-random</span>
+<span class="env-var">JWT_REFRESH_SECRET=different-64-char-random</span>
+<span class="env-var">JWT_EXPIRES_IN=15m</span>
+<span class="env-var">JWT_REFRESH_EXPIRES_IN=7d</span>
+<span class="env-var">GOOGLE_CLIENT_ID=xxx.apps.googleusercontent.com</span>
+<span class="env-var">GOOGLE_CLIENT_SECRET=GOCSPX-xxx</span>
+<span class="env-var">FACEBOOK_APP_ID=1234567890</span>
+<span class="env-var">FACEBOOK_APP_SECRET=abc123</span>
+</div>
+
+<ul class="check-list" style="margin-top:14px">
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Generate JWT_SECRET</div><div class="ci-detail">Run: <span class="code">openssl rand -base64 64</span> — copy output to env. Never reuse or share.</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Generate JWT_REFRESH_SECRET (different from JWT_SECRET)</div><div class="ci-detail">Run again: <span class="code">openssl rand -base64 64</span> — must be a completely different value</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Create first SUPER_ADMIN account</div><div class="ci-detail">Register via /auth/register → connect to DB → run: <span class="code">UPDATE users SET role='SUPER_ADMIN' WHERE email='your@email.com';</span></div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Set up Google OAuth (optional)</div><div class="ci-detail">console.cloud.google.com → Credentials → OAuth 2.0 → set redirect URLs</div><div class="ci-tags"><span class="tag t-paid">~Free</span></div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Set up Facebook OAuth (optional)</div><div class="ci-detail">developers.facebook.com → create app → Facebook Login → set redirect URLs</div></div></li>
+</ul>
+</div>
+</div>
+
+<!-- SECTION 4: PAYMENTS -->
+<div class="section" id="s4">
+<div class="sec-header" onclick="tog(4)">
+  <div class="sec-left"><div class="sec-icon" style="background:#fff7ed">💳</div><div><div class="sec-name">4. Payment Requirements</div><div class="sec-sub">MTN MoMo · Orange Money · Future Gateways</div></div></div>
+  <div class="sec-right"><span class="pri-badge pri-req">Required</span><span class="chevron" id="c4">▼</span></div>
+</div>
+<div class="sec-body" id="b4">
+
+<div class="alert alert-ok">
+<strong>✅ Manual Verification Mode is LIVE NOW</strong> — No API keys required. Customers pay to your numbers, submit proof, you approve in Admin → Orders.
+</div>
+
+<div class="two-col" style="margin-top:12px">
+<div class="inner-card" style="background:#fff7ed;border-color:#fed7aa">
+<h4 style="color:#d97706">MTN Mobile Money</h4>
+<ul>
+<li><strong>Number:</strong> 653526767</li>
+<li><strong>USSD:</strong> *126*4*1*653526767*AMOUNT#</li>
+<li><strong>Alternative Float:</strong> *126*46*4*1*12614654209793*AMOUNT#</li>
+<li>OR: MTN MoMo App → Send Money → 653526767</li>
+<li><strong>Already hardcoded in platform ✓</strong></li>
+</ul>
+</div>
+<div class="inner-card" style="background:#f0fdf4;border-color:#bbf7d0">
+<h4 style="color:#16a34a">Orange Money</h4>
+<ul>
+<li><strong>Number:</strong> 640638536</li>
+<li><strong>Account Name:</strong> Cho Clinton Teneng</li>
+<li>Orange Money App → Transfer → 640638536</li>
+<li><strong>Already hardcoded in platform ✓</strong></li>
+</ul>
+</div>
+</div>
+
+<div class="inner-card" style="margin-top:12px">
+<h4>Manual Verification Workflow</h4>
+<ul>
+<li>Customer selects MTN or Orange at checkout</li>
+<li>Platform shows exact USSD code or account number</li>
+<li>Customer makes payment via USSD / mobile app</li>
+<li>Customer submits: Transaction ID + Sender Number + Amount + Screenshot</li>
+<li>Order status changes to CONFIRMED (awaiting admin verification)</li>
+<li>Admin goes to Admin → Orders → filter CONFIRMED → click ✓ Approve or ✗ Reject</li>
+<li>On approval: Payment.status → PAID, Order.status → PROCESSING</li>
+<li>EventEmitter fires: email + SMS notification to customer</li>
+</ul>
+</div>
+
+<table class="req-table" style="margin-top:14px">
+<thead><tr><th>Future Gateway</th><th>Purpose</th><th>Registration</th><th>Timeline</th><th>Priority</th></tr></thead>
+<tbody>
+<tr><td>MTN MoMo API</td><td>Automated payment verification</td><td>momodeveloper.mtn.com — business account required</td><td>2–4 weeks approval</td><td class="p-med">FUTURE</td></tr>
+<tr><td>Orange Money API</td><td>Automated Orange verification</td><td>Contact Orange Business Cameroon directly</td><td>4–8 weeks approval</td><td class="p-med">FUTURE</td></tr>
+<tr><td>Stripe</td><td>International card payments</td><td>stripe.com — instant setup, no Cameroon direct support</td><td>1 day</td><td class="p-low">OPTIONAL</td></tr>
+<tr><td>PayPal</td><td>International PayPal payments</td><td>paypal.com/business — limited Cameroon support</td><td>1–3 days</td><td class="p-low">OPTIONAL</td></tr>
+</tbody>
+</table>
+
+<div class="ci-env" style="margin-top:10px">
+<strong style="font-size:.78rem;color:#64748b;display:block;margin-bottom:4px">ENVIRONMENT VARIABLES (future API mode)</strong>
+<span class="env-var">MTN_MOMO_API_KEY=your-key</span>
+<span class="env-var">MTN_MOMO_SUBSCRIPTION_KEY=your-sub-key</span>
+<span class="env-var">MTN_MOMO_ENVIRONMENT=production</span>
+<span class="env-var">ORANGE_CLIENT_ID=your-client-id</span>
+<span class="env-var">ORANGE_CLIENT_SECRET=your-secret</span>
+</div>
+
+<ul class="check-list" style="margin-top:14px">
+<li class="check-item"><div class="cb done" onclick="chk(this)"></div><div class="ci"><div class="ci-title">MTN MoMo manual number configured in codebase</div><div class="ci-detail">653526767 — USSD: *126*4*1*653526767*AMOUNT# — hardcoded and live ✓</div><div class="ci-tags"><span class="tag t-free">Already Done</span></div></div></li>
+<li class="check-item"><div class="cb done" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Orange Money manual number configured</div><div class="ci-detail">640638536 (Cho Clinton Teneng) — hardcoded and live ✓</div><div class="ci-tags"><span class="tag t-free">Already Done</span></div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Test full payment flow end-to-end</div><div class="ci-detail">Place a test order → pay 500 FCFA via MTN → submit transaction ID → verify admin approval works → confirm notification received</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Apply for MTN MoMo Developer API (for future automation)</div><div class="ci-detail">momodeveloper.mtn.com → Register → Create Collection API user → Get subscription key and API key</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Apply for Orange Money API (for future automation)</div><div class="ci-detail">Contact Orange Cameroon Business Services → request API access → provide business registration documents</div></div></li>
+</ul>
+</div>
+</div>
+
+<!-- SECTION 5: EMAIL -->
+<div class="section" id="s5">
+<div class="sec-header" onclick="tog(5)">
+  <div class="sec-left"><div class="sec-icon" style="background:#f0fdf4">📧</div><div><div class="sec-name">5. Email Requirements</div><div class="sec-sub">Order confirmations, password resets, shipping alerts</div></div></div>
+  <div class="sec-right"><span class="pri-badge pri-rec">Recommended</span><span class="chevron" id="c5">▼</span></div>
+</div>
+<div class="sec-body" id="b5">
+<div class="alert alert-info"><strong>Graceful degradation:</strong> If SMTP env vars are not set, emails are logged to console. The API will NOT crash without email config.</div>
+<table class="req-table" style="margin-top:10px">
+<thead><tr><th>Provider</th><th>Free Tier</th><th>Paid</th><th>Best For</th><th>Setup Difficulty</th></tr></thead>
+<tbody>
+<tr><td>SendGrid ⭐ Recommended</td><td>100 emails/day free</td><td>$15/mo (Essentials)</td><td>Transactional emails at scale</td><td class="p-low">Easy</td></tr>
+<tr><td>Gmail SMTP</td><td>Free (500/day limit)</td><td>Google Workspace $6/mo</td><td>Development &amp; small scale</td><td class="p-low">Easy</td></tr>
+<tr><td>Mailgun</td><td>100 emails/day free</td><td>$35/mo (Foundation)</td><td>Developers, good API</td><td class="p-med">Medium</td></tr>
+<tr><td>Postmark</td><td>100 emails/mo free</td><td>$15/mo (10k emails)</td><td>High deliverability</td><td class="p-low">Easy</td></tr>
+</tbody>
+</table>
+
+<div class="two-col" style="margin-top:12px">
+<div class="inner-card">
+<h4>SendGrid Setup</h4>
+<ul>
+<li>Register at sendgrid.com</li>
+<li>Settings → API Keys → Create Full Access key</li>
+<li>SMTP_HOST = smtp.sendgrid.net</li>
+<li>SMTP_PORT = 587</li>
+<li>SMTP_USER = apikey (literally the word "apikey")</li>
+<li>SMTP_PASS = SG.your-api-key-here</li>
+<li>Verify sender domain via DNS TXT/CNAME records</li>
+<li>Sender Authentication → Domain Authentication</li>
+</ul>
+</div>
+<div class="inner-card">
+<h4>Gmail SMTP Setup</h4>
+<ul>
+<li>Enable 2-Factor Authentication on Google account</li>
+<li>Google Account → Security → App Passwords</li>
+<li>Select App: Mail, Device: Other → Generate</li>
+<li>SMTP_HOST = smtp.gmail.com</li>
+<li>SMTP_PORT = 587</li>
+<li>SMTP_USER = your@gmail.com</li>
+<li>SMTP_PASS = xxxx xxxx xxxx xxxx (app password)</li>
+<li>⚠️ Max 500 emails/day limit</li>
+</ul>
+</div>
+</div>
+
+<div class="inner-card" style="margin-top:10px">
+<h4>Required DNS Records (SendGrid Domain Authentication)</h4>
+<ul>
+<li>SendGrid provides 3 CNAME records to add to your domain's DNS</li>
+<li>These authenticate your domain and prevent emails going to spam</li>
+<li>Takes 24-48 hours to propagate</li>
+<li>Check status in SendGrid → Settings → Sender Authentication</li>
+</ul>
+</div>
+
+<div class="ci-env" style="margin-top:10px">
+<strong style="font-size:.78rem;color:#64748b;display:block;margin-bottom:4px">ENVIRONMENT VARIABLES</strong>
+<span class="env-var">SMTP_HOST=smtp.sendgrid.net</span>
+<span class="env-var">SMTP_PORT=587</span>
+<span class="env-var">SMTP_USER=apikey</span>
+<span class="env-var">SMTP_PASS=SG.your-key</span>
+<span class="env-var">SMTP_FROM_EMAIL=hello@yourdomain.com</span>
+<span class="env-var">SMTP_FROM_NAME=Destiny E-Commerce</span>
+</div>
+
+<ul class="check-list" style="margin-top:14px">
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Create SendGrid account and API key</div><div class="ci-detail">sendgrid.com → Settings → API Keys → Create Key (Full Access) → copy</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Set all SMTP environment variables</div><div class="ci-detail">Add SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM_EMAIL, SMTP_FROM_NAME</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Add DNS records for domain authentication</div><div class="ci-detail">SendGrid → Sender Authentication → add provided CNAME records to your DNS. Prevents spam folder.</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Test email sending</div><div class="ci-detail">Place a test order → verify order confirmation email arrives. Check spam folder first time.</div></div></li>
+</ul>
+</div>
+</div>
+
+<!-- SECTION 6: SMS -->
+<div class="section" id="s6">
+<div class="sec-header" onclick="tog(6)">
+  <div class="sec-left"><div class="sec-icon" style="background:#f0f9ff">📱</div><div><div class="sec-name">6. SMS Requirements</div><div class="sec-sub">Africa's Talking · Twilio — for Cameroon numbers</div></div></div>
+  <div class="sec-right"><span class="pri-badge pri-opt">Optional</span><span class="chevron" id="c6">▼</span></div>
+</div>
+<div class="sec-body" id="b6">
+<div class="alert alert-info"><strong>Graceful degradation:</strong> SMS logs to console if AT_API_KEY is not set. No crash.</div>
+<table class="req-table" style="margin-top:10px">
+<thead><tr><th>Provider</th><th>Cameroon Coverage</th><th>Free Tier</th><th>Cost/SMS</th><th>Setup</th></tr></thead>
+<tbody>
+<tr><td>Africa's Talking ⭐</td><td>✅ Full MTN+Orange coverage</td><td>Sandbox free</td><td>~0.8 XAF (~$0.0014)</td><td class="p-low">Easy</td></tr>
+<tr><td>Twilio</td><td>⚠️ Limited Cameroon support</td><td>$15 credit trial</td><td>~$0.0750/SMS</td><td class="p-med">Medium</td></tr>
+</tbody>
+</table>
+
+<div class="inner-card" style="margin-top:12px">
+<h4>Africa's Talking Setup (Recommended for Cameroon)</h4>
+<ul>
+<li>Register at africastalking.com → create account</li>
+<li>Dashboard → Settings → API Key → copy key</li>
+<li>Username: your account username (sandbox: use "sandbox")</li>
+<li>Top up balance: Dashboard → Billing → Add Credit (minimum $5)</li>
+<li>For branded sender ID "Destiny": apply via Dashboard → SMS → Sender IDs (takes 2–4 weeks)</li>
+<li>Without sender ID: uses a random short code (still works)</li>
+<li>Test in sandbox first: AT_USERNAME=sandbox, AT_API_KEY=your-sandbox-key</li>
+</ul>
+</div>
+
+<div class="ci-env" style="margin-top:10px">
+<strong style="font-size:.78rem;color:#64748b;display:block;margin-bottom:4px">ENVIRONMENT VARIABLES</strong>
+<span class="env-var">AT_API_KEY=your-key</span>
+<span class="env-var">AT_USERNAME=your-username</span>
+<span class="env-var">AT_SENDER_ID=Destiny</span>
+</div>
+
+<ul class="check-list" style="margin-top:14px">
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Create Africa's Talking account</div><div class="ci-detail">africastalking.com → Sign up → verify email → go to sandbox first</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Get API key and set environment variables</div><div class="ci-detail">Dashboard → Settings → API Key → set AT_API_KEY and AT_USERNAME</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Top up account (minimum $5 credit)</div><div class="ci-detail">~$5 = ~3,500 SMS to Cameroon numbers. Rechargeable.</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Apply for branded Sender ID (optional)</div><div class="ci-detail">Sender IDs → Add ID → "Destiny" → submit. Takes 2–4 weeks, requires business docs.</div></div></li>
+</ul>
+</div>
+</div>
+
+<!-- SECTION 7: PUSH NOTIFICATIONS -->
+<div class="section" id="s7">
+<div class="sec-header" onclick="tog(7)">
+  <div class="sec-left"><div class="sec-icon" style="background:#fff7ed">🔔</div><div><div class="sec-name">7. Push Notification Requirements</div><div class="sec-sub">Firebase Cloud Messaging — Android &amp; iOS</div></div></div>
+  <div class="sec-right"><span class="pri-badge pri-opt">Optional</span><span class="chevron" id="c7">▼</span></div>
+</div>
+<div class="sec-body" id="b7">
+<div class="two-col">
+<div class="inner-card">
+<h4>Firebase Setup (Server Side)</h4>
+<ul>
+<li>Go to console.firebase.google.com</li>
+<li>Create project: "Destiny E-Commerce"</li>
+<li>Project Settings → Service Accounts</li>
+<li>Generate New Private Key → download JSON</li>
+<li>Save as firebase-service-account.json</li>
+<li>Set FIREBASE_SERVICE_ACCOUNT=/path/to/file</li>
+<li>Enable Cloud Messaging in Firebase console</li>
+</ul>
+</div>
+<div class="inner-card">
+<h4>Android App Setup</h4>
+<ul>
+<li>Firebase → Add Android app</li>
+<li>Package name: com.destiny.ecommerce</li>
+<li>Download google-services.json</li>
+<li>Place in apps/mobile/android/app/</li>
+<li>Add Firebase SDK to build.gradle</li>
+<li>Implement FCM token registration</li>
+<li>Send token to API on login</li>
+</ul>
+</div>
+</div>
+<div class="inner-card" style="margin-top:10px">
+<h4>iOS App Setup</h4>
+<ul>
+<li>Firebase → Add iOS app → Bundle ID: com.destiny.ecommerce</li>
+<li>Download GoogleService-Info.plist → place in Xcode project</li>
+<li>Apple Developer Account required ($99/yr)</li>
+<li>Create APNs Authentication Key: Certificates, IDs &amp; Profiles → Keys → + → Apple Push Notifications service</li>
+<li>Upload APNs key to Firebase → Project Settings → Cloud Messaging → iOS</li>
+</ul>
+</div>
+<div class="ci-env" style="margin-top:10px">
+<strong style="font-size:.78rem;color:#64748b;display:block;margin-bottom:4px">ENVIRONMENT VARIABLES</strong>
+<span class="env-var">FIREBASE_SERVICE_ACCOUNT=/app/firebase-service-account.json</span>
+</div>
+<ul class="check-list" style="margin-top:14px">
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Create Firebase project</div><div class="ci-detail">console.firebase.google.com → New project → enable Cloud Messaging</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Download service account JSON and set env var</div><div class="ci-detail">Project Settings → Service Accounts → Generate New Private Key → set FIREBASE_SERVICE_ACCOUNT path</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Configure APNs for iOS (if building mobile app)</div><div class="ci-detail">Requires Apple Developer account ($99/yr). Generate APNs key and upload to Firebase.</div></div></li>
+</ul>
+</div>
+</div>
+
+<!-- SECTION 8: IMAGE MANAGEMENT -->
+<div class="section" id="s8">
+<div class="sec-header" onclick="tog(8)">
+  <div class="sec-left"><div class="sec-icon" style="background:#fdf4ff">🖼️</div><div><div class="sec-name">8. Image Management — Cloudinary</div><div class="sec-sub">Product photos, avatars, banners, vendor logos</div></div></div>
+  <div class="sec-right"><span class="pri-badge pri-req">Required for uploads</span><span class="chevron" id="c8">▼</span></div>
+</div>
+<div class="sec-body" id="b8">
+<div class="inner-card">
+<h4>Cloudinary Setup</h4>
+<ul>
+<li>Register at cloudinary.com (free — 25GB storage, 25GB bandwidth/mo)</li>
+<li>Dashboard → copy Cloud Name, API Key, API Secret</li>
+<li>Go to Settings → Upload → Add upload preset → name it "destiny_products"</li>
+<li>Preset settings: Signing Mode = Unsigned (for direct browser uploads)</li>
+<li>Add transformations: f_auto (auto format), q_auto (auto quality), max width 1200px</li>
+<li>Create separate preset "destiny_avatars" for profile photos (max 400x400, face crop)</li>
+</ul>
+</div>
+
+<div class="cost-box" style="margin-top:12px">
+<div class="cost-title">Cloudinary Pricing</div>
+<div class="cost-row"><span>Free plan</span><span>25GB storage, 25GB bandwidth, 25 credits/mo</span></div>
+<div class="cost-row"><span>Plus plan</span><span>$89/mo — 225GB storage, 225GB bandwidth</span></div>
+<div class="cost-row"><span>Advanced plan</span><span>$224/mo — 600GB storage</span></div>
+<div class="cost-row"><span>Recommended for start</span><span class="p-low">Free plan (handles ~5,000–10,000 product images)</span></div>
+</div>
+
+<div class="ci-env" style="margin-top:10px">
+<strong style="font-size:.78rem;color:#64748b;display:block;margin-bottom:4px">ENVIRONMENT VARIABLES</strong>
+<span class="env-var">CLOUDINARY_CLOUD_NAME=your-cloud-name</span>
+<span class="env-var">CLOUDINARY_API_KEY=your-api-key</span>
+<span class="env-var">CLOUDINARY_API_SECRET=your-api-secret</span>
+</div>
+
+<ul class="check-list" style="margin-top:14px">
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Create Cloudinary account</div><div class="ci-detail">cloudinary.com → Sign up → verify email → get to dashboard</div><div class="ci-tags"><span class="tag t-free">Free 25GB</span></div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Copy Cloud Name, API Key, API Secret to env</div><div class="ci-detail">Dashboard top section shows all three values immediately after signup</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Create "destiny_products" upload preset</div><div class="ci-detail">Settings → Upload → Add upload preset → set unsigned, auto quality, webp conversion</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Create "destiny_avatars" upload preset</div><div class="ci-detail">Same as above but with face-detect crop, max 400x400px</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Verify Next.js image config includes res.cloudinary.com</div><div class="ci-detail">Already added to next.config.ts. Test by uploading a product image and checking it renders.</div></div></li>
+</ul>
+</div>
+</div>
+
+<!-- SECTION 9: SEARCH -->
+<div class="section" id="s9">
+<div class="sec-header" onclick="tog(9)">
+  <div class="sec-left"><div class="sec-icon" style="background:#f0fdf4">🔍</div><div><div class="sec-name">9. Search Requirements</div><div class="sec-sub">Elasticsearch optional — PostgreSQL fallback built-in</div></div></div>
+  <div class="sec-right"><span class="pri-badge pri-opt">Optional</span><span class="chevron" id="c9">▼</span></div>
+</div>
+<div class="sec-body" id="b9">
+<div class="alert alert-ok"><strong>No action required to launch.</strong> Platform uses PostgreSQL full-text search by default. Elasticsearch is an optional enhancement for typo tolerance and better relevance ranking.</div>
+<table class="req-table" style="margin-top:10px">
+<thead><tr><th>Option</th><th>Free Tier</th><th>Paid</th><th>When to use</th></tr></thead>
+<tbody>
+<tr><td>PostgreSQL (built-in default)</td><td>✅ Included with DB</td><td>Free</td><td>Always — fallback mode</td></tr>
+<tr><td>Bonsai.io Managed ES</td><td>10k docs, 125MB free</td><td>$10/mo (Standard)</td><td>When you have 100+ products</td></tr>
+<tr><td>Elastic Cloud</td><td>14-day trial</td><td>$16/mo (2GB)</td><td>Enterprise scale</td></tr>
+<tr><td>Self-hosted ES</td><td>Free software</td><td>Server costs</td><td>Advanced users only</td></tr>
+</tbody>
+</table>
+<div class="ci-env" style="margin-top:10px">
+<strong style="font-size:.78rem;color:#64748b;display:block;margin-bottom:4px">ENVIRONMENT VARIABLES</strong>
+<span class="env-var">ELASTICSEARCH_URL=https://user:pass@host.bonsaisearch.net</span>
+</div>
+<ul class="check-list" style="margin-top:14px">
+<li class="check-item"><div class="cb done" onclick="chk(this)"></div><div class="ci"><div class="ci-title">PostgreSQL search fallback is active</div><div class="ci-detail">Prisma full-text search is the default. Works without any configuration. ✓</div><div class="ci-tags"><span class="tag t-free">Already Done</span></div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Create Bonsai.io account for enhanced search (optional)</div><div class="ci-detail">bonsai.io → sign up → create cluster → copy URL with credentials → set ELASTICSEARCH_URL</div></div></li>
+</ul>
+</div>
+</div>
+
+<!-- SECTION 10: MAPS & DELIVERY -->
+<div class="section" id="s10">
+<div class="sec-header" onclick="tog(10)">
+  <div class="sec-left"><div class="sec-icon" style="background:#f0f9ff">📍</div><div><div class="sec-name">10. Maps &amp; Delivery Requirements</div><div class="sec-sub">Google Maps — GPS tracking, route optimization</div></div></div>
+  <div class="sec-right"><span class="pri-badge pri-opt">Optional</span><span class="chevron" id="c10">▼</span></div>
+</div>
+<div class="sec-body" id="b10">
+<div class="inner-card">
+<h4>Google Maps Platform Setup</h4>
+<ul>
+<li>Go to console.cloud.google.com → Enable billing (required, but free $200/mo credit)</li>
+<li>APIs &amp; Services → Library → Enable: Maps JavaScript API, Geocoding API, Directions API</li>
+<li>Credentials → Create API Key → copy key</li>
+<li>Restrict key to: HTTP referrers (your domain) for frontend key</li>
+<li>Restrict key to: IP addresses (your server) for backend key</li>
+<li>$200/mo free credit = ~28,000 map loads free monthly</li>
+</ul>
+</div>
+<div class="ci-env" style="margin-top:10px">
+<strong style="font-size:.78rem;color:#64748b;display:block;margin-bottom:4px">ENVIRONMENT VARIABLES</strong>
+<span class="env-var">GOOGLE_MAPS_API_KEY=AIzaSy-your-key (server)</span>
+<span class="env-var">NEXT_PUBLIC_GOOGLE_MAPS_KEY=AIzaSy-your-key (frontend)</span>
+</div>
+<ul class="check-list" style="margin-top:14px">
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Enable Google Maps Platform and create API key</div><div class="ci-detail">console.cloud.google.com → Enable billing → Create API key → enable Maps JS API + Geocoding</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Restrict API key to your domain</div><div class="ci-detail">API key → Application restrictions → HTTP referrers → add yourdomain.com/*</div></div></li>
+</ul>
+</div>
+</div>
+
+<!-- SECTION 11: SECURITY -->
+<div class="section" id="s11">
+<div class="sec-header" onclick="tog(11)">
+  <div class="sec-left"><div class="sec-icon" style="background:#fef2f2">🛡️</div><div><div class="sec-name">11. Security Requirements</div><div class="sec-sub">SSL, rate limiting, CSRF, XSS, SQL injection, audits, monitoring</div></div></div>
+  <div class="sec-right"><span class="pri-badge pri-req">Required</span><span class="chevron" id="c11">▼</span></div>
+</div>
+<div class="sec-body" id="b11">
+<table class="req-table">
+<thead><tr><th>Security Layer</th><th>Status</th><th>How Implemented</th><th>Priority</th></tr></thead>
+<tbody>
+<tr><td>SSL/HTTPS</td><td style="color:#16a34a">✅ Auto via Vercel/Railway</td><td>Let's Encrypt certificates, auto-renewed</td><td class="p-critical">CRITICAL</td></tr>
+<tr><td>Rate Limiting</td><td style="color:#16a34a">✅ Built-in</td><td>@nestjs/throttler — 100 req/min per IP</td><td class="p-critical">CRITICAL</td></tr>
+<tr><td>Helmet.js Headers</td><td style="color:#16a34a">✅ Built-in</td><td>XSS, clickjacking, MIME-type protection headers</td><td class="p-high">HIGH</td></tr>
+<tr><td>CORS Restriction</td><td style="color:#d97706">⚠️ Set CORS_ORIGIN</td><td>Only your domain can call the API</td><td class="p-critical">CRITICAL</td></tr>
+<tr><td>SQL Injection</td><td style="color:#16a34a">✅ Built-in</td><td>Prisma ORM — parameterized queries always</td><td class="p-critical">CRITICAL</td></tr>
+<tr><td>XSS Protection</td><td style="color:#16a34a">✅ Helmet + React</td><td>React escapes all HTML, Helmet sets CSP headers</td><td class="p-high">HIGH</td></tr>
+<tr><td>Password Hashing</td><td style="color:#16a34a">✅ Built-in</td><td>bcryptjs with 12 salt rounds</td><td class="p-critical">CRITICAL</td></tr>
+<tr><td>Audit Logs</td><td style="color:#16a34a">✅ Built-in</td><td>AuditLog model records all admin actions</td><td class="p-high">HIGH</td></tr>
+<tr><td>Error Monitoring</td><td style="color:#d97706">⚠️ Set up Sentry</td><td>Real-time error tracking in production</td><td class="p-high">HIGH</td></tr>
+<tr><td>Input Validation</td><td style="color:#16a34a">✅ Built-in</td><td>class-validator DTOs on all API endpoints</td><td class="p-critical">CRITICAL</td></tr>
+<tr><td>Secret Rotation</td><td style="color:#d97706">⚠️ Must set strong secrets</td><td>JWT secrets must be 64+ chars, unique</td><td class="p-critical">CRITICAL</td></tr>
+</tbody>
+</table>
+
+<div class="inner-card" style="margin-top:12px">
+<h4>Sentry Error Monitoring Setup (Recommended)</h4>
+<ul>
+<li>Register at sentry.io (free: 5k errors/mo)</li>
+<li>Create project → Node.js → copy DSN URL</li>
+<li>Install: <span class="code">npm install @sentry/nestjs</span></li>
+<li>Add to main.ts: <span class="code">Sentry.init({ dsn: process.env.SENTRY_DSN })</span></li>
+<li>Set env var: <span class="code">SENTRY_DSN=https://xxx@sentry.io/xxx</span></li>
+</ul>
+</div>
+
+<ul class="check-list" style="margin-top:14px">
+<li class="check-item"><div class="cb done" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Helmet.js security headers configured</div><div class="ci-detail">XSS protection, frame guard, content-type sniffing prevention — all active in main.ts ✓</div></div></li>
+<li class="check-item"><div class="cb done" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Rate limiting active (100 req/min per IP)</div><div class="ci-detail">@nestjs/throttler v5 configured in app.module.ts ✓</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Set CORS_ORIGIN to your production domain</div><div class="ci-detail">CORS_ORIGIN=https://yourdomain.com — restricts API to only your frontend</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Generate strong JWT_SECRET (64+ chars)</div><div class="ci-detail">openssl rand -base64 64 — never use short or guessable strings</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Set up Sentry error monitoring</div><div class="ci-detail">sentry.io → create project → install SDK → add SENTRY_DSN env var</div><div class="ci-tags"><span class="tag t-free">Free 5k errors/mo</span></div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Ensure .env file is in .gitignore</div><div class="ci-detail">NEVER commit .env to git. Verify .gitignore contains: .env, .env.*, *.env</div></div></li>
+</ul>
+</div>
+</div>
+
+<!-- SECTION 12: MOBILE APP -->
+<div class="section" id="s12">
+<div class="sec-header" onclick="tog(12)">
+  <div class="sec-left"><div class="sec-icon" style="background:#f0f9ff">📲</div><div><div class="sec-name">12. Mobile App Requirements</div><div class="sec-sub">Android (Google Play) · iOS (App Store)</div></div></div>
+  <div class="sec-right"><span class="pri-badge pri-opt">Future Phase</span><span class="chevron" id="c12">▼</span></div>
+</div>
+<div class="sec-body" id="b12">
+<div class="alert alert-warn"><strong>Not yet built.</strong> React Native + Expo mobile app is a future phase. Requirements below are for when you are ready to build it.</div>
+<div class="two-col" style="margin-top:12px">
+<div class="inner-card">
+<h4>Android — Google Play Console</h4>
+<ul>
+<li>Register at play.google.com/console ($25 one-time fee)</li>
+<li>Create app → Package name: com.destiny.ecommerce</li>
+<li>Generate signing keystore: <span class="code">keytool -genkey -v -keystore destiny.keystore</span></li>
+<li>Store keystore safely — losing it means you cannot update the app</li>
+<li>Set up Play App Signing (Google manages keys)</li>
+<li>Complete store listing: screenshots, icon (512x512), feature graphic</li>
+<li>Complete content rating questionnaire</li>
+<li>Review takes 1–3 days for new apps</li>
+</ul>
+</div>
+<div class="inner-card">
+<h4>iOS — Apple Developer Program</h4>
+<ul>
+<li>Apple Developer account: $99/year (developer.apple.com)</li>
+<li>Create App ID: com.destiny.ecommerce</li>
+<li>Create Distribution Certificate in Xcode</li>
+<li>Create App Store Provisioning Profile</li>
+<li>App Store Connect → New App → fill metadata</li>
+<li>Screenshots required: 6.7", 6.5", 5.5" sizes</li>
+<li>Submit for review — takes 1–7 days</li>
+<li>App Store Review Guidelines compliance required</li>
+</ul>
+</div>
+</div>
+
+<div class="inner-card" style="margin-top:10px">
+<h4>React Native + Expo Setup (when ready)</h4>
+<ul>
+<li>Create apps/mobile/ directory in monorepo</li>
+<li>Init: <span class="code">npx create-expo-app mobile --template expo-template-blank-typescript</span></li>
+<li>Install: expo-notifications, expo-location, @react-native-async-storage/async-storage</li>
+<li>Reuse API client from apps/web/src/lib/api/ (same endpoints)</li>
+<li>Configure EAS Build for CI/CD: <span class="code">npm install -g eas-cli && eas build</span></li>
+</ul>
+</div>
+</div>
+</div>
+
+<!-- SECTION 13: PRODUCTION LAUNCH CHECKLIST -->
+<div class="section" id="s13">
+<div class="sec-header" onclick="tog(13)">
+  <div class="sec-left"><div class="sec-icon" style="background:#f0fdf4">🚢</div><div><div class="sec-name">13. Production Launch Checklist</div><div class="sec-sub">Required · Recommended · Optional</div></div></div>
+  <div class="sec-right"><span class="pri-badge pri-req">Required</span><span class="chevron" id="c13">▼</span></div>
+</div>
+<div class="sec-body" id="b13">
+<div class="launch-grid">
+<div class="launch-card lc-req">
+<h4>🔴 Required Before Launch</h4>
+<ul>
+<li>DATABASE_URL configured and migrations run</li>
+<li>JWT_SECRET and JWT_REFRESH_SECRET set (64+ chars)</li>
+<li>CORS_ORIGIN set to your domain</li>
+<li>NODE_ENV=production</li>
+<li>SUPER_ADMIN account created</li>
+<li>Domain name registered and DNS configured</li>
+<li>SSL certificate active (HTTPS working)</li>
+<li>MTN MoMo 653526767 payment flow tested</li>
+<li>Orange Money 640638536 payment flow tested</li>
+<li>Admin panel accessible and functional</li>
+<li>At least 5 products added with images</li>
+<li>Categories and brands seeded</li>
+<li>API health endpoint responding: /api/v1/health</li>
+<li>.env not committed to git</li>
+</ul>
+</div>
+<div class="launch-card lc-rec">
+<h4>🟡 Recommended Before Launch</h4>
+<ul>
+<li>SMTP email configured and tested</li>
+<li>Cloudinary images working for products</li>
+<li>Error monitoring (Sentry) active</li>
+<li>Database backups verified</li>
+<li>Terms of Service page published</li>
+<li>Privacy Policy page published</li>
+<li>Refund/return policy documented</li>
+<li>Welcome coupon code created (WELCOME10)</li>
+<li>Admin approval workflow tested end-to-end</li>
+<li>Forgot password email flow tested</li>
+<li>Rate limiting tested (verify 429 after 100 req/min)</li>
+</ul>
+</div>
+<div class="launch-card lc-opt">
+<h4>🟢 Optional After Launch</h4>
+<ul>
+<li>SMS notifications (Africa's Talking)</li>
+<li>Push notifications (Firebase FCM)</li>
+<li>Elasticsearch enhanced search</li>
+<li>Google OAuth login</li>
+<li>Facebook OAuth login</li>
+<li>MTN MoMo API automated verification</li>
+<li>Orange Money API automated verification</li>
+<li>Google Maps delivery tracking</li>
+<li>Vendor portal approval workflow</li>
+<li>React Native mobile app</li>
+<li>Google Play / App Store publishing</li>
+<li>Analytics dashboard (Mixpanel/GA4)</li>
+</ul>
+</div>
+</div>
+
+<ul class="check-list" style="margin-top:14px">
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Complete full end-to-end test: register → browse → add to cart → checkout → pay → admin approve → customer notified</div><div class="ci-detail">This is the golden path. It must work perfectly before going live.</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Test admin panel: login → view orders → approve payment → mark shipped</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Test search: search for a product → results appear → filter works</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Test account page: login → view orders → see real order history (not mock data)</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Test forgot password: enter email → receive reset email → reset password → login with new password</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Verify mobile responsiveness on real phone</div><div class="ci-detail">Open on Android/iOS browser. Test checkout flow on mobile screen sizes.</div></div></li>
+</ul>
+</div>
+</div>
+
+<!-- SECTION 14: BUSINESS OPERATIONS -->
+<div class="section" id="s14">
+<div class="sec-header" onclick="tog(14)">
+  <div class="sec-left"><div class="sec-icon" style="background:#fdf4ff">💼</div><div><div class="sec-name">14. Business Operations Checklist</div><div class="sec-sub">Products · Inventory · Orders · Support · Vendors · Delivery</div></div></div>
+  <div class="sec-right"><span class="pri-badge pri-req">Before Launch</span><span class="chevron" id="c14">▼</span></div>
+</div>
+<div class="sec-body" id="b14">
+
+<div class="two-col">
+<div>
+<div class="inner-card" style="margin-bottom:10px">
+<h4>📦 Product Management</h4>
+<ul>
+<li>Create categories: Smartphones, Laptops, Audio, Accessories, Gaming, Smart Home, Cameras</li>
+<li>Create brands: Samsung, Apple, Huawei, Tecno, Itel, Xiaomi, Sony, JBL</li>
+<li>Add at least 10 products with: Name, SKU, Price (FCFA), Stock, Images, Description</li>
+<li>Mark 4–6 products as "Featured" for homepage</li>
+<li>Mark 3–4 products as "Flash Sale" with original + discounted price</li>
+<li>Set low stock alerts (default threshold: 10 units)</li>
+</ul>
+</div>
+<div class="inner-card" style="margin-bottom:10px">
+<h4>📋 Order Fulfillment</h4>
+<ul>
+<li>Check Admin → Orders daily (or set up SMS alert)</li>
+<li>When payment proof submitted: verify transaction in MTN/Orange app</li>
+<li>Approve payment → mark Processing → prepare item</li>
+<li>When shipped: mark Shipped → add tracking info</li>
+<li>Delivery confirmation: mark Delivered</li>
+<li>Disputed/unpaid: click Reject → customer notified</li>
+</ul>
+</div>
+<div class="inner-card">
+<h4>🏪 Vendor Management</h4>
+<ul>
+<li>Review vendor applications in Admin → Vendors → PENDING</li>
+<li>Verify seller identity before approving</li>
+<li>Set commission rate per vendor (default 10%)</li>
+<li>Monitor vendor products for policy compliance</li>
+<li>Process vendor payouts via MTN/Orange manually</li>
+</ul>
+</div>
+</div>
+<div>
+<div class="inner-card" style="margin-bottom:10px">
+<h4>📊 Inventory Management</h4>
+<ul>
+<li>Check Admin → Products → low stock alerts daily</li>
+<li>Red = 0–10 units, Yellow = 11–30 units, Green = 30+</li>
+<li>Restock before hitting 0 (reserved stock is tracked)</li>
+<li>Run stock reconciliation weekly</li>
+<li>Use InventoryLog model for audit trail</li>
+</ul>
+</div>
+<div class="inner-card" style="margin-bottom:10px">
+<h4>🎧 Customer Support</h4>
+<ul>
+<li>Check support tickets daily in Admin panel</li>
+<li>Respond within 24 hours (set expectation on site)</li>
+<li>Categories: Payment Issue, Order Issue, Product Question, Return Request</li>
+<li>Escalate to URGENT for payment disputes</li>
+<li>Keep email hello@yourdomain.com monitored</li>
+</ul>
+</div>
+<div class="inner-card">
+<h4>🚴 Delivery Operations</h4>
+<ul>
+<li>Set up delivery agent accounts (role: DELIVERY)</li>
+<li>Create delivery zones for Douala, Yaoundé, other cities</li>
+<li>Set shipping fees per zone in Admin → Settings</li>
+<li>Coordinate with agent when order is marked Processing</li>
+<li>Agent updates delivery status in real-time</li>
+</ul>
+</div>
+</div>
+</div>
+
+<ul class="check-list" style="margin-top:14px">
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Create all product categories and brands</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Add minimum 10 products with real images and FCFA prices</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Create homepage banners (3–5 promotional banners)</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Create WELCOME10 coupon (10% off for new customers)</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Set up daily order review routine</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Document return/refund policy and publish on site</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Create Terms of Service and Privacy Policy pages</div></div></li>
+</ul>
+</div>
+</div>
+
+<!-- SECTION 15: FINAL DELIVERABLE -->
+<div class="section" id="s15">
+<div class="sec-header" onclick="tog(15)">
+  <div class="sec-left"><div class="sec-icon" style="background:#fee2e2">🎯</div><div><div class="sec-name">15. Final Deliverable — Missing Items &amp; Readiness</div><div class="sec-sub">What you still need to do before going live</div></div></div>
+  <div class="sec-right"><span class="pri-badge pri-req">Summary</span><span class="chevron" id="c15">▼</span></div>
+</div>
+<div class="sec-body" id="b15">
+
+<div class="final-grid">
+<div class="final-card">
+<h4>🔑 Missing API Keys &amp; Accounts</h4>
+<div class="fc-item"><div class="fc-dot dot-red"></div>DATABASE_URL — Neon/Supabase account needed</div>
+<div class="fc-item"><div class="fc-dot dot-red"></div>JWT_SECRET + JWT_REFRESH_SECRET — must generate</div>
+<div class="fc-item"><div class="fc-dot dot-red"></div>Domain name — must purchase</div>
+<div class="fc-item"><div class="fc-dot dot-amber"></div>SMTP credentials — SendGrid/Gmail</div>
+<div class="fc-item"><div class="fc-dot dot-amber"></div>CLOUDINARY keys — free account needed</div>
+<div class="fc-item"><div class="fc-dot dot-green"></div>AT_API_KEY — Africa's Talking (optional)</div>
+<div class="fc-item"><div class="fc-dot dot-green"></div>FIREBASE_SERVICE_ACCOUNT — optional</div>
+<div class="fc-item"><div class="fc-dot dot-green"></div>GOOGLE_CLIENT_ID/SECRET — optional OAuth</div>
+</div>
+<div class="final-card">
+<h4>🌐 Missing Hosting Setup</h4>
+<div class="fc-item"><div class="fc-dot dot-red"></div>Vercel account — deploy frontend</div>
+<div class="fc-item"><div class="fc-dot dot-red"></div>Railway account — deploy API</div>
+<div class="fc-item"><div class="fc-dot dot-red"></div>Neon/Supabase account — PostgreSQL</div>
+<div class="fc-item"><div class="fc-dot dot-red"></div>Domain DNS configured</div>
+<div class="fc-item"><div class="fc-dot dot-amber"></div>Upstash Redis — optional cache</div>
+<div class="fc-item"><div class="fc-dot dot-green"></div>Bonsai.io Elasticsearch — optional search</div>
+</div>
+<div class="final-card">
+<h4>🗄️ Missing Deployment Steps</h4>
+<div class="fc-item"><div class="fc-dot dot-red"></div>Run: npx prisma migrate deploy</div>
+<div class="fc-item"><div class="fc-dot dot-red"></div>Run: npx prisma generate</div>
+<div class="fc-item"><div class="fc-dot dot-red"></div>Create SUPER_ADMIN account</div>
+<div class="fc-item"><div class="fc-dot dot-red"></div>Set all env vars in Railway/Vercel</div>
+<div class="fc-item"><div class="fc-dot dot-amber"></div>Seed categories, brands, products</div>
+<div class="fc-item"><div class="fc-dot dot-amber"></div>Test golden path end-to-end</div>
+</div>
+<div class="final-card">
+<h4>🏗️ Missing Code (Future)</h4>
+<div class="fc-item"><div class="fc-dot dot-amber"></div>Cloudinary upload widget (product form)</div>
+<div class="fc-item"><div class="fc-dot dot-amber"></div>Terms of Service page (/terms)</div>
+<div class="fc-item"><div class="fc-dot dot-amber"></div>Privacy Policy page (/privacy)</div>
+<div class="fc-item"><div class="fc-dot dot-amber"></div>Shop categories page (/shop/categories)</div>
+<div class="fc-item"><div class="fc-dot dot-green"></div>React Native mobile app</div>
+<div class="fc-item"><div class="fc-dot dot-green"></div>Google/Facebook OAuth wiring</div>
+</div>
+<div class="final-card">
+<h4>🔒 Missing Security Items</h4>
+<div class="fc-item"><div class="fc-dot dot-red"></div>Set CORS_ORIGIN to production domain</div>
+<div class="fc-item"><div class="fc-dot dot-red"></div>Confirm .env not in git history</div>
+<div class="fc-item"><div class="fc-dot dot-amber"></div>Set up Sentry error monitoring</div>
+<div class="fc-item"><div class="fc-dot dot-amber"></div>Configure backup schedule</div>
+<div class="fc-item"><div class="fc-dot dot-green"></div>Penetration testing (post-launch)</div>
+</div>
+<div class="final-card">
+<h4>💼 Missing Business Items</h4>
+<div class="fc-item"><div class="fc-dot dot-red"></div>Product catalog (min 10 products)</div>
+<div class="fc-item"><div class="fc-dot dot-red"></div>Categories and brands data</div>
+<div class="fc-item"><div class="fc-dot dot-amber"></div>Homepage banners uploaded</div>
+<div class="fc-item"><div class="fc-dot dot-amber"></div>Welcome coupon code created</div>
+<div class="fc-item"><div class="fc-dot dot-amber"></div>Return/refund policy published</div>
+<div class="fc-item"><div class="fc-dot dot-green"></div>Vendor partner recruitment</div>
+</div>
+</div>
+
+<!-- COST TABLE -->
+<div style="margin-top:24px">
+<div class="cost-title" style="font-size:.85rem;font-weight:800;color:#111827;margin-bottom:10px">💰 Estimated Monthly Cost Breakdown</div>
+<table class="cost-final-table">
+<thead><tr><th>Service</th><th>Provider</th><th>Free Tier</th><th>Startup (~50 orders/mo)</th><th>Growth (~500 orders/mo)</th></tr></thead>
+<tbody>
+<tr><td>Domain</td><td>Namecheap</td><td>None</td><td>$1/mo (~$12/yr)</td><td>$1/mo</td></tr>
+<tr><td>Frontend Hosting</td><td>Vercel</td><td>✅ Hobby: Free</td><td>$0/mo</td><td>$20/mo (Pro)</td></tr>
+<tr><td>API Hosting</td><td>Railway</td><td>$5 credit/mo</td><td>$5/mo</td><td>$20–50/mo</td></tr>
+<tr><td>PostgreSQL</td><td>Neon</td><td>✅ 3GB Free</td><td>$0/mo</td><td>$19/mo (Pro)</td></tr>
+<tr><td>Redis Cache</td><td>Upstash</td><td>✅ 10k cmd/day</td><td>$0/mo</td><td>$10/mo</td></tr>
+<tr><td>Images</td><td>Cloudinary</td><td>✅ 25GB Free</td><td>$0/mo</td><td>$0–89/mo</td></tr>
+<tr><td>Email</td><td>SendGrid</td><td>✅ 100/day Free</td><td>$0/mo</td><td>$15/mo</td></tr>
+<tr><td>SMS</td><td>Africa's Talking</td><td>Sandbox Free</td><td>$5/mo (~3,500 SMS)</td><td>$20/mo</td></tr>
+<tr><td>Push Notifications</td><td>Firebase</td><td>✅ Free</td><td>$0/mo</td><td>$0/mo</td></tr>
+<tr><td>Search</td><td>PostgreSQL (default)</td><td>✅ Free</td><td>$0/mo</td><td>$10/mo (Bonsai)</td></tr>
+<tr><td>Error Monitoring</td><td>Sentry</td><td>✅ 5k errors/mo</td><td>$0/mo</td><td>$26/mo</td></tr>
+<tr><td>MTN MoMo API</td><td>MTN</td><td>Free (% of transaction)</td><td>$0/mo</td><td>$0/mo</td></tr>
+<tr><td>Orange Money API</td><td>Orange</td><td>Free (% of transaction)</td><td>$0/mo</td><td>$0/mo</td></tr>
+<tr class="total-row"><td>TOTAL</td><td>—</td><td>$0/mo (mostly free)</td><td>~$6–11/mo</td><td>~$100–225/mo</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- READINESS SCORE -->
+<div class="readiness-bar" style="margin-top:24px">
+<div style="font-size:.85rem;font-weight:800;color:#111827;margin-bottom:12px">📊 Production Readiness Estimate</div>
+<div style="margin-bottom:12px">
+  <div class="rb-label"><span>Backend API (code complete)</span><strong>95%</strong></div>
+  <div class="rb-track"><div class="rb-fill" style="width:95%"></div></div>
+</div>
+<div style="margin-bottom:12px">
+  <div class="rb-label"><span>Frontend (code complete)</span><strong>88%</strong></div>
+  <div class="rb-track"><div class="rb-fill" style="width:88%"></div></div>
+</div>
+<div style="margin-bottom:12px">
+  <div class="rb-label"><span>Payment System (manual mode live)</span><strong>100%</strong></div>
+  <div class="rb-track"><div class="rb-fill" style="width:100%"></div></div>
+</div>
+<div style="margin-bottom:12px">
+  <div class="rb-label"><span>Infrastructure (needs deployment)</span><strong>40%</strong></div>
+  <div class="rb-track"><div class="rb-fill" style="width:40%"></div></div>
+</div>
+<div style="margin-bottom:12px">
+  <div class="rb-label"><span>Business Operations (needs content)</span><strong>10%</strong></div>
+  <div class="rb-track"><div class="rb-fill" style="width:10%"></div></div>
+</div>
+<div style="margin-bottom:4px">
+  <div class="rb-label"><span><strong>Overall Launch Readiness</strong></span><strong>67%</strong></div>
+  <div class="rb-track"><div class="rb-fill" style="width:67%"></div></div>
+</div>
+<div class="alert alert-info" style="margin-top:12px">
+<strong>To reach 100%:</strong> (1) Set up hosting + env vars, (2) Run migrations, (3) Create admin account, (4) Add product catalog, (5) Test payment flow. Estimated time: 4–8 hours of setup work.
+</div>
+</div>
+
+<!-- EXACT STEPS REMAINING -->
+<div style="margin-top:20px">
+<div style="font-size:.85rem;font-weight:800;color:#111827;margin-bottom:10px">🗺️ Exact Steps to Launch (In Order)</div>
+<ul class="check-list">
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Step 1: Create Neon account → get DATABASE_URL</div><div class="ci-detail">neon.tech → New Project → copy connection string</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Step 2: Generate JWT secrets</div><div class="ci-detail"><span class="code">openssl rand -base64 64</span> (run twice, use different values)</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Step 3: Create apps/api/.env from apps/api/.env.example</div><div class="ci-detail">Fill in DATABASE_URL, JWT_SECRET, JWT_REFRESH_SECRET, PORT=5000 minimum</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Step 4: Run database migrations</div><div class="ci-detail"><span class="code">cd destiny-ecommerce/apps/api && npx prisma migrate dev --name init && npx prisma generate</span></div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Step 5: Start API locally and test</div><div class="ci-detail"><span class="code">npm run dev</span> → visit http://localhost:5000/api/v1/health → should return {"status":"ok"}</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Step 6: Start frontend locally and test</div><div class="ci-detail"><span class="code">cd apps/web && echo "NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1" > .env.local && npm run dev</span></div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Step 7: Register your account and set SUPER_ADMIN role</div><div class="ci-detail">Register at localhost:3000/auth/register → connect to DB → UPDATE users SET role='SUPER_ADMIN' WHERE email='your@email.com';</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Step 8: Add categories, brands, and products</div><div class="ci-detail">Admin panel at localhost:3000/admin/dashboard → navigate to each section</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Step 9: Create Cloudinary account and add credentials</div><div class="ci-detail">cloudinary.com → Dashboard → copy Cloud Name, API Key, Secret → add to .env</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Step 10: Create SendGrid account and add SMTP credentials</div><div class="ci-detail">sendgrid.com → API Key → add SMTP vars to .env → test email works</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Step 11: Deploy API to Railway</div><div class="ci-detail">railway.app → New Project → GitHub → root=apps/api → add all env vars → deploy</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Step 12: Deploy frontend to Vercel</div><div class="ci-detail">vercel.com → New Project → GitHub → root=apps/web → NEXT_PUBLIC_API_URL=https://your-api.railway.app/api/v1 → deploy</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Step 13: Register domain and configure DNS</div><div class="ci-detail">namecheap.com → buy domain → add CNAME records pointing to Vercel and Railway URLs</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Step 14: Set CORS_ORIGIN and redeploy</div><div class="ci-detail">CORS_ORIGIN=https://yourdomain.com → update in Railway → redeploy API</div></div></li>
+<li class="check-item"><div class="cb" onclick="chk(this)"></div><div class="ci"><div class="ci-title">Step 15: Run full end-to-end test on production URL</div><div class="ci-detail">Browse → add to cart → checkout → pay via MTN → submit transaction ID → admin approve → confirm email received</div></div></li>
+</ul>
+</div>
+</div>
+</div>
+
+</div><!-- end container -->
+
+<div id="copyTarget" style="display:none">
+DESTINY E-COMMERCE — MANDATORY INTEGRATION REQUIREMENTS CHECKLIST
+=================================================================
+
+SECTION 1: DOMAIN & HOSTING
+• Domain name (.com or .cm) — ~$12/yr — Namecheap recommended
+• SSL certificate — AUTO via Vercel/Railway (Let's Encrypt, free)
+• Frontend hosting — Vercel (free hobby tier)
+• API hosting — Railway (~$5/mo)
+• Database hosting — Neon PostgreSQL (3GB free)
+• File storage — Cloudinary (25GB free)
+ENV: FRONTEND_URL, API_URL, CORS_ORIGIN, NEXT_PUBLIC_API_URL
+
+SECTION 2: DATABASE
+• PostgreSQL @ Neon/Supabase — required
+• Run: npx prisma migrate deploy
+• Run: npx prisma generate
+• Redis @ Upstash — optional cache
+ENV: DATABASE_URL, REDIS_URL
+
+SECTION 3: AUTHENTICATION
+• Generate JWT_SECRET: openssl rand -base64 64
+• Generate JWT_REFRESH_SECRET (different value)
+• Create SUPER_ADMIN: UPDATE users SET role='SUPER_ADMIN' WHERE email='...'
+• Google OAuth — optional (Google Cloud Console → Credentials)
+• Facebook OAuth — optional (developers.facebook.com)
+ENV: JWT_SECRET, JWT_REFRESH_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, FACEBOOK_APP_ID, FACEBOOK_APP_SECRET
+
+SECTION 4: PAYMENTS (LIVE IMMEDIATELY)
+MTN Mobile Money:
+  Number: 653526767
+  USSD: *126*4*1*653526767*AMOUNT#
+  Alternative Float: *126*46*4*1*12614654209793*AMOUNT#
+Orange Money:
+  Number: 640638536
+  Account: Cho Clinton Teneng
+Workflow: Customer pays → submits transaction ID + sender + screenshot → Admin approves → order confirmed
+Future: MTN MoMo API (momodeveloper.mtn.com), Orange Money API (contact Orange Business)
+ENV (future): MTN_MOMO_API_KEY, MTN_MOMO_SUBSCRIPTION_KEY, ORANGE_CLIENT_ID, ORANGE_CLIENT_SECRET
+
+SECTION 5: EMAIL
+• SendGrid (recommended) — 100 emails/day free
+  SMTP_HOST=smtp.sendgrid.net, SMTP_PORT=587, SMTP_USER=apikey, SMTP_PASS=SG.xxx
+• Gmail SMTP — free, 500/day limit
+  SMTP_HOST=smtp.gmail.com, SMTP_PORT=587
+• Add DNS TXT/CNAME records from SendGrid for domain authentication
+ENV: SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM_EMAIL, SMTP_FROM_NAME
+
+SECTION 6: SMS
+• Africa's Talking — best for Cameroon (~0.8 XAF/SMS)
+• Sandbox free, production requires account top-up ($5 min)
+• Optional: Apply for branded Sender ID "Destiny" (2-4 weeks)
+ENV: AT_API_KEY, AT_USERNAME, AT_SENDER_ID
+
+SECTION 7: PUSH NOTIFICATIONS
+• Firebase Cloud Messaging — free
+• Project Settings → Service Accounts → Generate Private Key
+• Android: download google-services.json
+• iOS: Apple Developer ($99/yr) + APNs key
+ENV: FIREBASE_SERVICE_ACCOUNT=/path/to/service-account.json
+
+SECTION 8: CLOUDINARY
+• Free: 25GB storage, 25GB bandwidth
+• Create upload presets: "destiny_products" and "destiny_avatars"
+ENV: CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET
+
+SECTION 9: SEARCH
+• PostgreSQL full-text search is the DEFAULT (no config needed)
+• Elasticsearch optional: Bonsai.io (10k docs free) or Elastic Cloud
+ENV: ELASTICSEARCH_URL (optional)
+
+SECTION 10: MAPS & DELIVERY
+• Google Maps Platform — $200/mo free credit
+• Enable: Maps JavaScript API, Geocoding API, Directions API
+ENV: GOOGLE_MAPS_API_KEY, NEXT_PUBLIC_GOOGLE_MAPS_KEY
+
+SECTION 11: SECURITY (mostly built-in)
+✅ Helmet.js headers, Rate limiting (100 req/min), SQL injection (Prisma), XSS (React+Helmet), bcrypt passwords, Audit logs
+⚠️ Must set: CORS_ORIGIN, strong JWT secrets, Sentry monitoring
+
+SECTION 12: MOBILE APP (Future)
+• Android: Google Play Console ($25 one-time), com.destiny.ecommerce
+• iOS: Apple Developer ($99/yr), Bundle ID: com.destiny.ecommerce
+• Framework: React Native + Expo
+
+SECTION 13: LAUNCH CHECKLIST
+REQUIRED: DATABASE_URL, JWT secrets, CORS_ORIGIN, NODE_ENV=production, SUPER_ADMIN account, domain, SSL, payment flow tested, 5+ products, categories/brands
+RECOMMENDED: SMTP email, Cloudinary, Sentry, T&C/Privacy pages, coupon code
+OPTIONAL: SMS, Push, Elasticsearch, OAuth, payment APIs, mobile app
+
+SECTION 14: BUSINESS OPERATIONS
+• Categories: Smartphones, Laptops, Audio, Accessories, Gaming, Smart Home, Cameras
+• Brands: Samsung, Apple, Huawei, Tecno, Itel, Xiaomi, Sony, JBL
+• Add 10+ products with FCFA prices, mark 4-6 as featured, 3-4 as flash sale
+• Daily order review routine (check Admin → Orders)
+• Verify payment in MTN/Orange app before approving
+
+SECTION 15: FINAL SUMMARY
+MISSING (Red - Must Do):
+  □ DATABASE_URL (create Neon account)
+  □ JWT_SECRET + JWT_REFRESH_SECRET (generate)
+  □ Domain name (purchase from Namecheap)
+  □ Deploy to Railway (API) and Vercel (frontend)
+  □ Run Prisma migrations
+  □ Create SUPER_ADMIN account
+  □ Seed product catalog
+
+MISSING (Amber - Recommended):
+  □ SMTP email credentials (SendGrid)
+  □ Cloudinary image upload
+  □ CORS_ORIGIN set to production domain
+  □ Sentry error monitoring
+  □ Terms of Service + Privacy Policy pages
+  □ Homepage banners + coupon codes
+
+ESTIMATED MONTHLY COST:
+  Free tier: $0/mo (Neon + Vercel + SendGrid 100/day + Cloudinary 25GB)
+  Startup (50 orders/mo): ~$6–11/mo (Railway $5 + domain $1)
+  Growth (500 orders/mo): ~$100–225/mo
+
+PRODUCTION READINESS:
+  Backend API: 95%
+  Frontend: 88%
+  Payment System: 100% (manual mode live)
+  Infrastructure: 40% (needs deployment)
+  Business Operations: 10% (needs content)
+  OVERALL: ~67% — ~4-8 hours of setup work to launch
+</div>
+
+<footer>
+  Destiny E-Commerce · Mandatory Integration &amp; Requirements Checklist · <strong>choclinton3-ai/n8n-docs</strong>
+</footer>
+
+<script>
+let checks = JSON.parse(localStorage.getItem('dc_checks2') || '{}');
+function save(){localStorage.setItem('dc_checks2',JSON.stringify(checks))}
+function chk(el){
+  const id=el.dataset.id||(el.dataset.id='id_'+Math.random().toString(36).slice(2));
+  el.classList.toggle('done');
+  checks[id]=el.classList.contains('done');
+  save();updateProgress();
+}
+function restore(){
+  document.querySelectorAll('.cb').forEach((el,i)=>{
+    el.dataset.id='id_'+i;
+    if(checks['id_'+i])el.classList.add('done');
+  });
+}
+function updateProgress(){
+  const all=document.querySelectorAll('.cb');
+  const done=document.querySelectorAll('.cb.done');
+  const pct=all.length>0?Math.round(done.length/all.length*100):0;
+  document.getElementById('pFill').style.width=pct+'%';
+  document.getElementById('pPct').textContent=pct+'%';
+  document.getElementById('pLeft').textContent=done.length+' completed';
+  document.getElementById('pRight').textContent=all.length+' total';
+  document.getElementById('doneN').textContent=done.length;
+  document.getElementById('totalN').textContent=all.length;
+}
+function tog(n){
+  const b=document.getElementById('b'+n);
+  const c=document.getElementById('c'+n);
+  b.classList.toggle('hidden');
+  c.classList.toggle('open');
+}
+function copyText(){
+  const text=document.getElementById('copyTarget').innerText;
+  const ta=document.createElement('textarea');
+  ta.value=text;ta.setAttribute('readonly','');
+  ta.style.cssText='position:fixed;top:0;left:0;width:2px;height:2px;opacity:0;';
+  document.body.appendChild(ta);ta.focus();ta.select();
+  let ok=false;try{ok=document.execCommand('copy')}catch(e){}
+  if(!ok&&navigator.clipboard)navigator.clipboard.writeText(text).catch(()=>{});
+  document.body.removeChild(ta);
+  const btn=document.getElementById('cpBtn');
+  btn.textContent='✅ Copied!';btn.classList.add('ok');
+  setTimeout(()=>{btn.textContent='📋 Copy Checklist';btn.classList.remove('ok')},2500);
+}
+restore();updateProgress();
+</script>
+</body>
+</html>
