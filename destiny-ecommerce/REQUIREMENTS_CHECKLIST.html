@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Destiny E-Commerce — Requirements Collection Checklist</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f8f9fa;color:#1a1a2e;line-height:1.6}
+.hero{background:linear-gradient(135deg,#e91e8c,#7c3aed);color:#fff;padding:40px 32px 36px;text-align:center}
+.hero h1{font-size:2rem;font-weight:900;margin-bottom:8px}
+.hero p{opacity:.85;font-size:1rem;max-width:680px;margin:0 auto 24px}
+.copy-btn{display:inline-flex;align-items:center;gap:10px;background:#fff;color:#e91e8c;font-weight:800;font-size:1rem;padding:13px 36px;border-radius:50px;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.25);transition:all .2s}
+.copy-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.copy-btn.done{background:#22c55e;color:#fff}
+.container{max-width:1100px;margin:0 auto;padding:32px 20px}
+h2{font-size:1.35rem;font-weight:800;color:#1a1a2e;margin:40px 0 16px;padding-bottom:10px;border-bottom:3px solid #e91e8c;display:flex;align-items:center;gap:10px}
+h2 .num{background:#e91e8c;color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.req{background:#fff;border:1px solid #e8e8f0;border-radius:14px;margin-bottom:16px;overflow:hidden}
+.req-header{display:flex;align-items:center;gap:12px;padding:14px 18px;background:#fafafa;border-bottom:1px solid #f0f0f8;flex-wrap:wrap}
+.req-name{font-weight:700;color:#1a1a2e;font-size:.95rem;flex:1;min-width:200px}
+.badge{padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+.required{background:#fee2e2;color:#dc2626}
+.optional{background:#fef9c3;color:#854d0e}
+.recommended{background:#dbeafe;color:#1d4ed8}
+.req-body{padding:16px 18px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+@media(max-width:640px){.grid{grid-template-columns:1fr}}
+.field{padding:8px 12px;border-bottom:1px solid #f5f5f8}
+.grid .field:nth-child(odd){border-right:1px solid #f5f5f8}
+.field:last-child,.field:nth-last-child(2):nth-child(odd){border-bottom:none}
+.field-label{font-size:.7rem;font-weight:700;text-transform:uppercase;color:#9ca3af;letter-spacing:.5px;margin-bottom:2px}
+.field-value{font-size:.85rem;color:#374151}
+.field-value code{background:#f3f4f6;padding:2px 6px;border-radius:4px;font-family:monospace;font-size:.82rem;color:#e91e8c}
+.can-wait{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;padding:4px 10px;border-radius:6px;margin-top:10px;font-weight:600}
+.can-wait.yes{background:#dcfce7;color:#166534}
+.can-wait.no{background:#fee2e2;color:#991b1b}
+.can-wait.partial{background:#fef9c3;color:#854d0e}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e8e8f0;margin:24px 0}
+table th{background:#1a1a2e;color:#fff;padding:12px 14px;text-align:left;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px}
+table td{padding:11px 14px;border-bottom:1px solid #f0f0f8;font-size:.84rem;vertical-align:top}
+table tr:last-child td{border-bottom:none}
+table tr:hover td{background:#fafafa}
+.p-critical{color:#dc2626;font-weight:700}
+.p-high{color:#ea580c;font-weight:700}
+.p-medium{color:#d97706;font-weight:600}
+.p-low{color:#65a30d;font-weight:600}
+.s-needed{background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:10px;font-size:.75rem;font-weight:700}
+.s-optional{background:#fef9c3;color:#854d0e;padding:2px 8px;border-radius:10px;font-size:.75rem;font-weight:700}
+.s-done{background:#dcfce7;color:#166534;padding:2px 8px;border-radius:10px;font-size:.75rem;font-weight:700}
+.s-skip{background:#f3f4f6;color:#6b7280;padding:2px 8px;border-radius:10px;font-size:.75rem;font-weight:700}
+.launch{background:#1a1a2e;color:#fff;border-radius:16px;padding:28px;margin-top:40px}
+.launch h2{color:#fff;border-bottom-color:#7c3aed;margin-top:0}
+.launch-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.launch-item:last-child{border-bottom:none}
+.launch-item .cb{width:18px;height:18px;border:2px solid #7c3aed;border-radius:4px;flex-shrink:0;margin-top:2px}
+.launch-item .txt{font-size:.88rem;color:rgba(255,255,255,.85)}
+.launch-item .txt strong{color:#fff}
+.launch-item .tag{font-size:.7rem;padding:2px 8px;border-radius:10px;font-weight:700;flex-shrink:0;margin-top:2px}
+.t-blocker{background:#dc2626;color:#fff}
+.t-req{background:#ea580c;color:#fff}
+.t-opt{background:#7c3aed;color:#fff}
+#copyTarget{position:absolute;left:-9999px;top:0;width:1px;height:1px;overflow:hidden;white-space:pre}
+.note{background:#fff8f0;border-left:4px solid #f97316;padding:12px 16px;border-radius:0 8px 8px 0;margin-top:12px;font-size:.84rem;color:#7c2d12}
+.section-intro{font-size:.88rem;color:#6b7280;margin-bottom:16px;padding:10px 14px;background:#f9fafb;border-radius:8px;border-left:3px solid #e91e8c}
+</style>
+</head>
+<body>
+<div class="hero">
+  <h1>Requirements Collection Checklist</h1>
+  <p>Destiny E-Commerce — Every piece of information, credential, and decision needed from the owner before production launch</p>
+  <button class="copy-btn" onclick="copyAll(this)">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+    Copy All as Plain Text
+  </button>
+</div>
+<div class="container">
+
+<!-- ========== SECTION 1: BUSINESS INFORMATION ========== -->
+<h2><span class="num">1</span> Business Information</h2>
+<p class="section-intro">Legal and operational details about the business entity. Required for invoices, legal pages, and regulatory compliance.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Legal Business Name</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Where to Get</div><div class="field-value">Your business registration certificate or tax document</div></div>
+    <div class="field"><div class="field-label">Expected Format</div><div class="field-value">Full legal name as registered <code>Destiny Global Trading SARL</code></div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">Used in Terms of Service, Privacy Policy, invoices, and payment receipts</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait partial">⚠ Partial — trading name works temporarily, legal name required for compliance</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Business Type / Legal Structure</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Options</div><div class="field-value">Sole Trader, Partnership, SARL (Ltd), SA (PLC), Association</div></div>
+    <div class="field"><div class="field-label">Expected Format</div><div class="field-value">Text <code>SARL</code> or <code>Sole Trader</code></div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">Determines liability language in Terms of Service and invoice format</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — affects legal docs only</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Business Registration Number</span><span class="badge optional">Optional</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Where to Get</div><div class="field-value">Centre de Formalités des Entreprises (CFE), Cameroon</div></div>
+    <div class="field"><div class="field-label">Expected Format</div><div class="field-value">Alphanumeric <code>RC/YAO/2024/B/12345</code></div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">Required for MTN/Orange Business API approval and merchant accounts</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — manual payments work without it</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Tax Identification Number (NIF/TIN)</span><span class="badge optional">Optional</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Where to Get</div><div class="field-value">Direction Générale des Impôts (DGI), Cameroon</div></div>
+    <div class="field"><div class="field-label">Expected Format</div><div class="field-value"><code>M123456789A</code></div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">Required for formal merchant accounts with MTN/Orange and for invoicing</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — not needed for launch</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Physical Business Address</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Expected Format</div><div class="field-value">Street, Neighbourhood, City, Region, Cameroon</div></div>
+    <div class="field"><div class="field-label">Example</div><div class="field-value"><code>Rue 1.234, Bastos, Yaoundé, Centre, Cameroon</code></div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">Footer, contact page, Terms of Service, and legal jurisdiction clause</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait partial">⚠ Partial — city/country minimum required for legal pages</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Official Business Phone Number</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Expected Format</div><div class="field-value">E.164 international format <code>+237 6XX XXX XXX</code></div></div>
+    <div class="field"><div class="field-label">Current Value</div><div class="field-value">653526767 (MTN) — confirm if this is the official business number</div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">Footer, contact page, SMS sender, support tickets</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait no">✗ No — needed for customer contact</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Official Business Email Address</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Expected Format</div><div class="field-value"><code>hello@yourdomain.com</code> — must match your domain</div></div>
+    <div class="field"><div class="field-label">Current Placeholder</div><div class="field-value"><code>hello@destiny-ecommerce.com</code> — replace with real address</div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">All transactional emails sent from this address; footer; legal pages</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait no">✗ No — required for order confirmations</span></div></div>
+  </div></div>
+</div>
+
+<!-- ========== SECTION 2: COMPANY/BRAND INFORMATION ========== -->
+<h2><span class="num">2</span> Company / Brand Information</h2>
+<p class="section-intro">Visual identity and brand assets needed to complete the storefront design.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Official Store / Brand Name</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Current Value</div><div class="field-value"><code>Destiny E-Commerce</code> — confirm or provide final name</div></div>
+    <div class="field"><div class="field-label">Expected Format</div><div class="field-value">Short name used in UI, emails, and app store listings</div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">Appears in browser tab, email subject lines, push notifications, app name</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait no">✗ No — needed from day one</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Brand Logo (High Resolution)</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">How to Obtain</div><div class="field-value">From your designer or create via Canva / Adobe Illustrator</div></div>
+    <div class="field"><div class="field-label">Expected Format</div><div class="field-value">SVG preferred, PNG fallback — transparent background, min 512×512px</div></div>
+    <div class="field"><div class="field-label">Variants Needed</div><div class="field-value">Full logo, icon only (for favicon and app icon), white version (for dark backgrounds)</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait partial">⚠ Partial — text-based logo placeholder exists but looks unprofessional</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Brand Colors (Hex Codes)</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Current Values</div><div class="field-value">Primary: <code>#E91E8C</code> (pink), Secondary: <code>#7C3AED</code> (purple) — confirm or change</div></div>
+    <div class="field"><div class="field-label">What to Provide</div><div class="field-value">Primary color, secondary color, accent color (if any)</div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">Tailwind theme, email templates, mobile app theme, marketing materials</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — current pink/purple theme is live and working</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Store Tagline / Slogan</span><span class="badge optional">Optional</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Example</div><div class="field-value"><code>"Shop Smart, Live Better"</code> or <code>"Cameroon's #1 Online Store"</code></div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">Hero section, email footer, app store description, meta tags (SEO)</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — improve after launch</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">About Us Content</span><span class="badge recommended">Recommended</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">What to Provide</div><div class="field-value">2–4 paragraphs: who you are, what you sell, your mission, why customers should trust you</div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">About page, email footer bio, app store listing description</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — add after launch</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Social Media Handles / Links</span><span class="badge recommended">Recommended</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">What to Provide</div><div class="field-value">Facebook page URL, Instagram handle, WhatsApp Business number, TikTok handle (if any)</div></div>
+    <div class="field"><div class="field-label">Expected Format</div><div class="field-value"><code>https://facebook.com/destinyecommerce</code>, <code>@destinyshop</code></div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">Footer social icons, meta og:tags, share buttons</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — footer links hidden if not provided</span></div></div>
+  </div></div>
+</div>
+
+
+<!-- ========== SECTION 3: DOMAIN & BRANDING ========== -->
+<h2><span class="num">3</span> Domain &amp; Branding</h2>
+<p class="section-intro">Your web address and SSL setup. Without a domain, customers cannot reach your store.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Domain Name</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">How to Obtain</div><div class="field-value">Register at Namecheap, GoDaddy, Google Domains, or a Cameroonian registrar (.cm domains via ANTIC)</div></div>
+    <div class="field"><div class="field-label">Exact Steps</div><div class="field-value">1. Go to namecheap.com → Search your name → Purchase → You receive login credentials</div></div>
+    <div class="field"><div class="field-label">Expected Format</div><div class="field-value"><code>destiny-ecommerce.com</code> or <code>destinyshop.cm</code></div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">Customer-facing URL; also needed for email (@yourdomain.com), OAuth redirect URIs, and SSL</div></div>
+    <div class="field"><div class="field-label">Cost</div><div class="field-value">.com: ~$10–15/year | .cm: ~$50–80/year via ANTIC Cameroon</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait partial">⚠ Partial — can use vercel.app subdomain temporarily, but not professional</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">DNS Provider / Nameservers Access</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">What It Is</div><div class="field-value">Login to the dashboard where your domain DNS records are managed</div></div>
+    <div class="field"><div class="field-label">Steps</div><div class="field-value">1. Log in to your domain registrar 2. Go to DNS settings 3. Add A/CNAME records as Vercel instructs</div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">To point your domain to Vercel (frontend) and Railway (API)</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait no">✗ No — required to connect domain to hosting</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">SSL Certificate</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">How to Obtain</div><div class="field-value">Automatically provisioned by Vercel (frontend) and Railway (API) — no action needed if using those platforms</div></div>
+    <div class="field"><div class="field-label">Steps</div><div class="field-value">1. Add domain in Vercel dashboard 2. Vercel automatically issues Let's Encrypt SSL — takes 1–5 minutes</div></div>
+    <div class="field"><div class="field-label">Cost</div><div class="field-value">Free via Let's Encrypt on Vercel/Railway</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait no">✗ No — browsers block non-HTTPS sites; payment flows require HTTPS</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Favicon &amp; App Icons</span><span class="badge recommended">Recommended</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Sizes Required</div><div class="field-value">16×16, 32×32 (favicon), 192×192, 512×512 (PWA), 1024×1024 (app store)</div></div>
+    <div class="field"><div class="field-label">How to Create</div><div class="field-value">Use realfavicongenerator.net — upload your logo, download the pack</div></div>
+    <div class="field"><div class="field-label">Format</div><div class="field-value">ICO for favicon, PNG for app icons</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait partial">⚠ Partial — default Next.js favicon shows; replace before marketing</span></div></div>
+  </div></div>
+</div>
+
+<!-- ========== SECTION 4: HOSTING ========== -->
+<h2><span class="num">4</span> Hosting</h2>
+<p class="section-intro">Where your application runs. The API (backend) and frontend are deployed separately.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Vercel Account (Frontend)</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">How to Obtain</div><div class="field-value">Go to vercel.com → Sign up with GitHub account → Free Hobby plan is sufficient to start</div></div>
+    <div class="field"><div class="field-label">Steps</div><div class="field-value">1. vercel.com/signup 2. Connect GitHub 3. Import repo 4. Set root: destiny-ecommerce/apps/web 5. Add NEXT_PUBLIC_API_URL env var 6. Deploy</div></div>
+    <div class="field"><div class="field-label">Cost</div><div class="field-value">Free (Hobby) — upgrade to Pro ($20/mo) when traffic exceeds 100GB bandwidth</div></div>
+    <div class="field"><div class="field-label">What You Provide</div><div class="field-value">GitHub account email used to sign up for Vercel</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait no">✗ No — this hosts the customer-facing website</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Railway Account (API Backend)</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">How to Obtain</div><div class="field-value">Go to railway.app → Sign up with GitHub → Create new project → Deploy from GitHub repo</div></div>
+    <div class="field"><div class="field-label">Steps</div><div class="field-value">1. railway.app/login 2. New Project → Deploy from GitHub 3. Select repo 4. Set root: destiny-ecommerce/apps/api 5. Add all env vars 6. Deploy</div></div>
+    <div class="field"><div class="field-label">Cost</div><div class="field-value">$5 free credit/month — typically enough for low-medium traffic; $5–20/mo paid</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait no">✗ No — this hosts the API all data flows through</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Preferred Server Region</span><span class="badge recommended">Recommended</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Options</div><div class="field-value">EU West (France/Ireland — closest to West Africa), US East, Asia Pacific</div></div>
+    <div class="field"><div class="field-label">Recommendation</div><div class="field-value">EU West (Frankfurt or Paris) for lowest latency to Cameroon</div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">Affects page load speed for Cameroonian customers</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — default region works, can change later</span></div></div>
+  </div></div>
+</div>
+
+<!-- ========== SECTION 5: DATABASE ========== -->
+<h2><span class="num">5</span> Database</h2>
+<p class="section-intro">PostgreSQL database where all orders, users, products, and payments are stored.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Neon PostgreSQL Account &amp; Database URL</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">How to Obtain</div><div class="field-value">Go to neon.tech → Sign up → Create project → Copy connection string</div></div>
+    <div class="field"><div class="field-label">Exact Steps</div><div class="field-value">1. neon.tech/signup 2. Create project "destiny-ecommerce" 3. Choose region closest to Railway (EU West) 4. Dashboard → Connection Details → Copy connection string</div></div>
+    <div class="field"><div class="field-label">Expected Format</div><div class="field-value"><code>postgresql://user:password@ep-xyz.eu-west-2.aws.neon.tech/destiny_ecommerce?sslmode=require</code></div></div>
+    <div class="field"><div class="field-label">Cost</div><div class="field-value">Free: 3GB storage, 1 project — sufficient for launch</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait no">✗ No — required to store any data</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Database Backup Policy Decision</span><span class="badge recommended">Recommended</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Question for Owner</div><div class="field-value">How often do you want database backups? Daily / Every 6 hours / Real-time?</div></div>
+    <div class="field"><div class="field-label">Neon Free Tier</div><div class="field-value">7-day point-in-time restore included on free tier</div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">Accidental deletion or data corruption requires a restore point</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — Neon default 7-day restore is sufficient</span></div></div>
+  </div></div>
+</div>
+
+<!-- ========== SECTION 6: AUTHENTICATION ========== -->
+<h2><span class="num">6</span> Authentication</h2>
+<p class="section-intro">Secrets used to sign and verify login tokens. Must be generated securely — never share these publicly.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">JWT_SECRET (Access Token Secret)</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">How to Generate</div><div class="field-value">Run in terminal: <code>node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"</code></div></div>
+    <div class="field"><div class="field-label">Expected Format</div><div class="field-value">Random hex string, minimum 64 characters</div></div>
+    <div class="field"><div class="field-label">Example</div><div class="field-value"><code>a3f8b2c1d9e4f7a0b3c6d2e5f8a1b4c7d0e3f6a9b2c5d8e1f4a7b0c3d6e9f2a5</code></div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">Signs login tokens — if compromised, all user sessions are at risk</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait no">✗ No — nobody can log in without this</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">JWT_REFRESH_SECRET (Refresh Token Secret)</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">How to Generate</div><div class="field-value">Same command as above — generate a <strong>different</strong> value from JWT_SECRET</div></div>
+    <div class="field"><div class="field-label">Why Different</div><div class="field-value">If one secret leaks, the other still protects sessions. Never use the same secret twice.</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait no">✗ No — refresh tokens will fail, users get logged out every 15 minutes</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Session Timeout Preferences</span><span class="badge recommended">Recommended</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Current Settings</div><div class="field-value">Access token: 15 minutes | Refresh token: 7 days</div></div>
+    <div class="field"><div class="field-label">Question for Owner</div><div class="field-value">Should customers stay logged in for 7 days, 30 days, or until they explicitly log out?</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — current 7-day refresh is standard</span></div></div>
+  </div></div>
+</div>
+
+<!-- ========== SECTION 7: GOOGLE OAUTH ========== -->
+<h2><span class="num">7</span> Google OAuth (Sign in with Google)</h2>
+<p class="section-intro">Allows customers to register and log in using their Google account — no password needed.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Google Cloud Project</span><span class="badge recommended">Recommended</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">How to Obtain</div><div class="field-value">Go to console.cloud.google.com → Create project → Name it "Destiny E-Commerce"</div></div>
+    <div class="field"><div class="field-label">Steps</div><div class="field-value">1. console.cloud.google.com 2. New Project → "Destiny E-Commerce" 3. Enable "Google+ API" and "OAuth 2.0" 4. Credentials → Create OAuth Client ID 5. Application type: Web application 6. Add authorized redirect URI: <code>https://yourdomain.com/api/auth/google/callback</code></div></div>
+    <div class="field"><div class="field-label">What You Receive</div><div class="field-value">Client ID: <code>123456789-abc.apps.googleusercontent.com</code> | Client Secret: <code>GOCSPX-xxxxx</code></div></div>
+    <div class="field"><div class="field-label">Cost</div><div class="field-value">Free — unlimited Google logins</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — email/password login works without OAuth; add later</span></div></div>
+  </div></div>
+</div>
+
+<!-- ========== SECTION 8: FACEBOOK OAUTH ========== -->
+<h2><span class="num">8</span> Facebook OAuth (Continue with Facebook)</h2>
+<p class="section-intro">Allows customers to register and log in using their Facebook account.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Facebook App ID &amp; Secret</span><span class="badge optional">Optional</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">How to Obtain</div><div class="field-value">Go to developers.facebook.com → Create App → Consumer type → Add Facebook Login product</div></div>
+    <div class="field"><div class="field-label">Steps</div><div class="field-value">1. developers.facebook.com/apps 2. Create App → Consumer 3. Add product: Facebook Login 4. Settings → Valid OAuth Redirect URIs: <code>https://yourdomain.com/api/auth/facebook/callback</code> 5. Copy App ID and App Secret from Basic Settings</div></div>
+    <div class="field"><div class="field-label">What You Receive</div><div class="field-value">App ID: <code>1234567890123456</code> | App Secret: <code>abc123def456...</code></div></div>
+    <div class="field"><div class="field-label">Additional Requirement</div><div class="field-value">App must pass Facebook review to use with real users (takes 1–7 days)</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — add after launch; button is UI-only currently</span></div></div>
+  </div></div>
+</div>
+
+
+<!-- ========== SECTION 9: EMAIL NOTIFICATIONS ========== -->
+<h2><span class="num">9</span> Email Notifications</h2>
+<p class="section-intro">Transactional emails sent to customers: order confirmations, payment verified, shipping updates, password resets.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Email Provider Choice</span><span class="badge required">Required</span></div>
+  <div class="req-body">
+    <div class="note">Choose ONE of the following options:</div>
+    <div class="grid" style="margin-top:12px">
+      <div class="field"><div class="field-label">Option A — SendGrid (Recommended)</div><div class="field-value">sendgrid.com → Sign up → Settings → API Keys → Create key with "Mail Send" permission. Free: 100 emails/day. Format: <code>SG.xxxxxxxx</code></div></div>
+      <div class="field"><div class="field-label">Option B — Gmail SMTP</div><div class="field-value">Your Gmail → Security → 2-Step Verification ON → App Passwords → Generate password. Format: <code>xxxx xxxx xxxx xxxx</code>. Limit: 500/day</div></div>
+      <div class="field"><div class="field-label">Option C — Mailgun</div><div class="field-value">mailgun.com → Sign up → Domains → Add domain → Get SMTP credentials. Free: 100/day for 3 months</div></div>
+      <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait partial">⚠ Partial — platform works but customers get no email receipts (not recommended)</span></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Sender Email Address &amp; Display Name</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">What to Decide</div><div class="field-value">From address customers see in inbox and display name</div></div>
+    <div class="field"><div class="field-label">Example</div><div class="field-value">From: <code>Destiny E-Commerce &lt;orders@yourdomain.com&gt;</code></div></div>
+    <div class="field"><div class="field-label">Requirement</div><div class="field-value">Must be a real inbox you control or verified with your email provider</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait no">✗ No — needed to configure email sending</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Email Domain DNS Records (SPF/DKIM)</span><span class="badge recommended">Recommended</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">What It Is</div><div class="field-value">DNS records that prove your emails are legitimate (prevent spam filtering)</div></div>
+    <div class="field"><div class="field-label">Steps</div><div class="field-value">1. Your email provider shows you the TXT records to add 2. Go to your domain DNS panel 3. Add SPF record: <code>v=spf1 include:sendgrid.net ~all</code> 4. Add DKIM CNAME records (SendGrid provides 3)</div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">Without SPF/DKIM, order emails go to spam for most customers</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait partial">⚠ Partial — emails send but likely land in spam</span></div></div>
+  </div></div>
+</div>
+
+<!-- ========== SECTION 10: SMS NOTIFICATIONS ========== -->
+<h2><span class="num">10</span> SMS Notifications</h2>
+<p class="section-intro">SMS alerts to customers for order confirmations, payment verification, and delivery updates. Targeted at Cameroon (+237) numbers.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Africa's Talking Account &amp; API Key</span><span class="badge recommended">Recommended</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">How to Obtain</div><div class="field-value">Go to africastalking.com → Register → Verify email → Go to Settings → API Key → Generate</div></div>
+    <div class="field"><div class="field-label">Exact Steps</div><div class="field-value">1. africastalking.com/auth/register 2. Choose "Live" environment 3. Settings → API Key → Copy 4. Go to SMS → Sender IDs → Request ID approval 5. Top up airtime credit (min ~$5)</div></div>
+    <div class="field"><div class="field-label">Expected Format</div><div class="field-value">API Key: <code>atsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</code> | Username: your registered username</div></div>
+    <div class="field"><div class="field-label">Cost to Cameroon</div><div class="field-value">~0.8 XAF per SMS (~$0.0013 USD). 1,000 SMS = ~800 XAF ($1.30)</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — falls back to console.log; add for better customer experience</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">SMS Sender ID</span><span class="badge recommended">Recommended</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">What It Is</div><div class="field-value">The name customers see as the SMS sender instead of a random number</div></div>
+    <div class="field"><div class="field-label">Example</div><div class="field-value"><code>DESTINY</code> or <code>DESTSHOP</code> (max 11 characters, alphanumeric)</div></div>
+    <div class="field"><div class="field-label">Steps to Approve</div><div class="field-value">1. Africa's Talking dashboard → SMS → Sender IDs → Request 2. Provide business registration proof 3. Wait 2–5 business days for approval</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — generic shortcode used until approved</span></div></div>
+  </div></div>
+</div>
+
+<!-- ========== SECTION 11: PUSH NOTIFICATIONS ========== -->
+<h2><span class="num">11</span> Push Notifications</h2>
+<p class="section-intro">Browser and mobile push notifications for order updates, promotions, and alerts.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Firebase Project &amp; Service Account</span><span class="badge optional">Optional</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">How to Obtain</div><div class="field-value">console.firebase.google.com → Create project → Project Settings → Service Accounts → Generate New Private Key</div></div>
+    <div class="field"><div class="field-label">Exact Steps</div><div class="field-value">1. console.firebase.google.com 2. Add project → "destiny-ecommerce" 3. Skip Google Analytics (optional) 4. Project Settings (gear icon) → Service accounts tab 5. "Generate new private key" → Download JSON file</div></div>
+    <div class="field"><div class="field-label">What You Receive</div><div class="field-value">JSON file containing: <code>project_id</code>, <code>client_email</code>, <code>private_key</code></div></div>
+    <div class="field"><div class="field-label">Cost</div><div class="field-value">Free forever for FCM push notifications</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — push notifications disabled gracefully without this</span></div></div>
+  </div></div>
+</div>
+
+<!-- ========== SECTION 12: CLOUDINARY ========== -->
+<h2><span class="num">12</span> Cloudinary (Image &amp; File Storage)</h2>
+<p class="section-intro">Cloud storage for product images, vendor logos, banner images, and user profile photos.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Cloudinary Account Credentials</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">How to Obtain</div><div class="field-value">cloudinary.com → Sign Up Free → Dashboard shows your credentials immediately</div></div>
+    <div class="field"><div class="field-label">Exact Steps</div><div class="field-value">1. cloudinary.com/users/register_free 2. Verify email 3. Dashboard → API Keys section → Copy Cloud Name, API Key, API Secret</div></div>
+    <div class="field"><div class="field-label">What You Receive</div><div class="field-value">Cloud Name: <code>your-cloud-name</code> | API Key: <code>123456789012345</code> | API Secret: <code>abc123XYZ...</code></div></div>
+    <div class="field"><div class="field-label">Cost</div><div class="field-value">Free: 25GB storage, 25GB monthly bandwidth — sufficient for launch</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait partial">⚠ Partial — image URLs can be entered manually; upload widget won't work</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Cloudinary Upload Preset</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">What It Is</div><div class="field-value">A named configuration for how uploaded images are processed and stored</div></div>
+    <div class="field"><div class="field-label">Steps to Create</div><div class="field-value">1. Cloudinary Dashboard → Settings → Upload tab 2. Add upload preset → Name: <code>destiny_products</code> 3. Set folder: <code>destiny-ecommerce/products</code> 4. Signing mode: Unsigned (for frontend uploads) 5. Enable auto-quality and auto-format</div></div>
+    <div class="field"><div class="field-label">Expected Value</div><div class="field-value"><code>destiny_products</code> (the preset name you choose)</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait partial">⚠ Same as above — manual URLs work as fallback</span></div></div>
+  </div></div>
+</div>
+
+<!-- ========== SECTION 13: ELASTICSEARCH ========== -->
+<h2><span class="num">13</span> Elasticsearch (Advanced Search)</h2>
+<p class="section-intro">Powers fast full-text product search. The platform already has a PostgreSQL fallback — Elasticsearch is an upgrade, not a requirement.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Elasticsearch Cloud Credentials</span><span class="badge optional">Optional</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">How to Obtain</div><div class="field-value">cloud.elastic.co → Start free trial → Create deployment → Copy endpoint URL and API key</div></div>
+    <div class="field"><div class="field-label">Expected Format</div><div class="field-value">URL: <code>https://abc123.eu-west-1.aws.elastic-cloud.com:9243</code> | API Key: <code>base64string==</code></div></div>
+    <div class="field"><div class="field-label">Cost</div><div class="field-value">No free tier — starts at ~$16/month. Use PostgreSQL search until revenue justifies it.</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — PostgreSQL full-text search is the default and works well</span></div></div>
+  </div></div>
+</div>
+
+<!-- ========== SECTION 14: GOOGLE MAPS ========== -->
+<h2><span class="num">14</span> Google Maps</h2>
+<p class="section-intro">Used for address autocomplete on checkout and delivery agent location tracking.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Google Maps API Key</span><span class="badge optional">Optional</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">How to Obtain</div><div class="field-value">console.cloud.google.com → APIs & Services → Credentials → Create API Key → Restrict to Maps JavaScript API</div></div>
+    <div class="field"><div class="field-label">Exact Steps</div><div class="field-value">1. Enable billing on Google Cloud (required even for free tier) 2. Enable Maps JavaScript API + Places API 3. Create API Key 4. Restrict: HTTP referrers → your domain</div></div>
+    <div class="field"><div class="field-label">Expected Format</div><div class="field-value"><code>AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</code></div></div>
+    <div class="field"><div class="field-label">Cost</div><div class="field-value">$200 free monthly credit — enough for ~28,000 map loads or ~40,000 address lookups</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — address entered as plain text field without autocomplete</span></div></div>
+  </div></div>
+</div>
+
+
+<!-- ========== SECTION 15: MTN MOBILE MONEY ========== -->
+<h2><span class="num">15</span> MTN Mobile Money</h2>
+<p class="section-intro">Primary payment method for Cameroon. Currently implemented as manual verification — customer pays then submits transaction ID.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">MTN MoMo Receiving Number (Confirm Ownership)</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Current Value</div><div class="field-value"><code>653526767</code> — hardcoded in checkout and instructions</div></div>
+    <div class="field"><div class="field-label">Questions for Owner</div><div class="field-value">1. Is this your personal number or business number? 2. Is this number always active and monitored? 3. Who checks incoming payments to verify orders?</div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">All customer payments go to this number — must be monitored continuously during business hours</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait no">✗ No — this is already configured; just needs confirmation</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Alternative Float Number (Confirm)</span><span class="badge recommended">Recommended</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Current Value</div><div class="field-value">Float USSD: <code>*126*46*4*1*12614654209793*AMOUNT#</code></div></div>
+    <div class="field"><div class="field-label">Questions for Owner</div><div class="field-value">1. What is this float account number? 2. Should both numbers be shown to customers as options?</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — primary number 653526767 is sufficient</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Payment Monitoring Process</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">What to Define</div><div class="field-value">Who checks incoming MoMo payments? What hours? What is the maximum wait time before a payment is verified?</div></div>
+    <div class="field"><div class="field-label">Example Answer</div><div class="field-value">"I check the MTN app every hour 8am–8pm. Orders after 8pm are verified next morning."</div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">This SLA needs to appear on checkout page so customers know when to expect confirmation</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait partial">⚠ Partial — vague SLA frustrates customers; must define before launch</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">MTN MoMo Business API (Future — Automation)</span><span class="badge optional">Optional</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">How to Obtain</div><div class="field-value">momodeveloper.mtn.com → Register → Create subscription → Subscribe to Collection API → Request sandbox keys → After testing, submit live API access request to MTN Cameroon</div></div>
+    <div class="field"><div class="field-label">Requirements</div><div class="field-value">Business registration certificate, tax ID, bank account in business name, MTN partner agreement</div></div>
+    <div class="field"><div class="field-label">What You Receive</div><div class="field-value">API User ID (UUID), API Key, Subscription Key (Ocp-Apim-Subscription-Key)</div></div>
+    <div class="field"><div class="field-label">Timeline</div><div class="field-value">Sandbox: immediate | Live approval: 2–8 weeks</div></div>
+    <div class="field"><div class="field-label">Cost</div><div class="field-value">Transaction fee ~1–2% per payment collected</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — manual verification works fully without API</span></div></div>
+  </div></div>
+</div>
+
+<!-- ========== SECTION 16: ORANGE MONEY ========== -->
+<h2><span class="num">16</span> Orange Money</h2>
+<p class="section-intro">Secondary payment method. Same manual verification flow as MTN MoMo.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Orange Money Receiving Number (Confirm)</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Current Value</div><div class="field-value">Number: <code>640638536</code> | Name: <code>Cho Clinton Teneng</code></div></div>
+    <div class="field"><div class="field-label">Questions for Owner</div><div class="field-value">1. Is this your personal or business Orange Money account? 2. Is this number always active? 3. Same person monitoring MTN also monitors Orange?</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait no">✗ No — already configured, just needs confirmation</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Orange Money Business API (Future)</span><span class="badge optional">Optional</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">How to Obtain</div><div class="field-value">developer.orange.com → Orange Money API → Register → Apply for Cameroon collection access</div></div>
+    <div class="field"><div class="field-label">Requirements</div><div class="field-value">Orange Business Partner agreement, business registration, local Orange Cameroon contact</div></div>
+    <div class="field"><div class="field-label">Timeline</div><div class="field-value">4–12 weeks for live approval — Orange is slower than MTN for API access in Cameroon</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — manual verification fully functional</span></div></div>
+  </div></div>
+</div>
+
+<!-- ========== SECTION 17: STRIPE ========== -->
+<h2><span class="num">17</span> Stripe (International Card Payments)</h2>
+<p class="section-intro">For Visa/Mastercard payments from international customers or diaspora. Important note below.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Stripe Account &amp; API Keys</span><span class="badge optional">Optional</span></div>
+  <div class="req-body">
+    <div class="note">⚠ IMPORTANT: Stripe does NOT directly support Cameroon as a payout country. To use Stripe, you need a business entity or bank account in a supported country (e.g., USA, UK, France). If you have a business registered abroad or a partner in a supported country, Stripe is possible. Otherwise, skip this.</div>
+    <div class="grid" style="margin-top:12px">
+      <div class="field"><div class="field-label">How to Obtain</div><div class="field-value">dashboard.stripe.com → Create account → Activate payments → API Keys section</div></div>
+      <div class="field"><div class="field-label">What You Receive</div><div class="field-value">Publishable Key: <code>pk_live_xxxx</code> | Secret Key: <code>sk_live_xxxx</code> | Webhook Secret: <code>whsec_xxxx</code></div></div>
+      <div class="field"><div class="field-label">Question for Owner</div><div class="field-value">Do you have a bank account in a Stripe-supported country to receive payouts?</div></div>
+      <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — MTN/Orange MoMo covers the Cameroonian market</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SECTION 18: PAYPAL ========== -->
+<h2><span class="num">18</span> PayPal</h2>
+<p class="section-intro">For international buyers who prefer PayPal. Same regional restriction as Stripe.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">PayPal Business Account</span><span class="badge optional">Optional</span></div>
+  <div class="req-body">
+    <div class="note">⚠ IMPORTANT: PayPal restricts accounts in Cameroon — you cannot withdraw funds to a Cameroonian bank. Options: (A) Use a verified PayPal linked to a US/EU bank account, (B) Use PayPal.me link for manual collection (like MoMo), (C) Skip PayPal entirely for now.</div>
+    <div class="grid" style="margin-top:12px">
+      <div class="field"><div class="field-label">How to Obtain</div><div class="field-value">paypal.com → Sign up → Business account → Upgrade to verified → Get Client ID and Secret from developer.paypal.com</div></div>
+      <div class="field"><div class="field-label">What You Receive</div><div class="field-value">Client ID: <code>AaBbCcDd...</code> | Secret: <code>EeFfGgHh...</code></div></div>
+      <div class="field"><div class="field-label">Question for Owner</div><div class="field-value">Do you have a verified PayPal account that can receive and withdraw international payments?</div></div>
+      <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — currently shown as "coming soon" in checkout</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SECTION 19: ADMIN ACCOUNTS ========== -->
+<h2><span class="num">19</span> Admin Accounts</h2>
+<p class="section-intro">First accounts that will have super admin access to the entire platform.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Super Admin Email &amp; Password</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">What to Decide</div><div class="field-value">Email address and strong password for the main admin account</div></div>
+    <div class="field"><div class="field-label">Steps After Launch</div><div class="field-value">1. Register at /auth/register with chosen email/password 2. In database (Prisma Studio or SQL): UPDATE users SET role = 'SUPER_ADMIN' WHERE email = 'youremail@...'</div></div>
+    <div class="field"><div class="field-label">Password Requirements</div><div class="field-value">Minimum 12 characters, mix of upper/lower/numbers/symbols — store in a password manager</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait no">✗ No — nobody can approve payments, vendors, or manage orders without admin access</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Additional Staff Admin Accounts</span><span class="badge optional">Optional</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">What to Decide</div><div class="field-value">List of staff who need admin access: name, email, role (ADMIN vs SUPPORT vs DELIVERY)</div></div>
+    <div class="field"><div class="field-label">Available Roles</div><div class="field-value">SUPER_ADMIN (full access), ADMIN (no role management), SUPPORT (tickets only), DELIVERY (delivery assignments only)</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — one super admin is sufficient to start</span></div></div>
+  </div></div>
+</div>
+
+<!-- ========== SECTION 20: VENDOR ACCOUNTS ========== -->
+<h2><span class="num">20</span> Vendor Accounts</h2>
+<p class="section-intro">Third-party sellers on your marketplace. Define the rules before the first vendor applies.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Vendor Commission Rate</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Question for Owner</div><div class="field-value">What percentage of each vendor sale does Destiny E-Commerce keep? (e.g., 5%, 10%, 15%)</div></div>
+    <div class="field"><div class="field-label">Industry Standard</div><div class="field-value">Marketplace platforms typically charge 5–20% commission</div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">Must be stated in Vendor Agreement and coded into payout calculations</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait partial">⚠ Partial — can onboard vendors without automated payouts, but rate must be agreed verbally</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Vendor Verification Requirements</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Question for Owner</div><div class="field-value">What documents must a vendor submit to be approved? (e.g., National ID, business registration, product samples)</div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">Shown on vendor registration form and Terms; prevents fraudulent sellers</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait partial">⚠ Partial — admin manually reviews all applications, but criteria must be documented</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Vendor Payout Schedule &amp; Method</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Question for Owner</div><div class="field-value">How and when do you pay vendors their earnings? Weekly MoMo transfer? Monthly? Vendor requests payout?</div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">Must be stated in Vendor Agreement to avoid disputes</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait partial">⚠ Partial — manual payouts work but schedule must be clear to vendors</span></div></div>
+  </div></div>
+</div>
+
+<!-- ========== SECTION 21: DELIVERY AGENTS ========== -->
+<h2><span class="num">21</span> Delivery Agents</h2>
+<p class="section-intro">People responsible for delivering orders to customers. Their accounts and zones must be defined.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Delivery Zones &amp; Coverage Areas</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Question for Owner</div><div class="field-value">Which cities/areas do you currently deliver to? What is the delivery fee for each zone?</div></div>
+    <div class="field"><div class="field-label">Example</div><div class="field-value">Zone 1: Yaoundé Centre — 1,500 FCFA | Zone 2: Douala — 2,000 FCFA | Zone 3: Other cities — 5,000 FCFA</div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">Checkout calculates shipping fee based on customer's city; shown in site settings</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait partial">⚠ Partial — flat 2,000 FCFA fee currently applied; zones needed for accurate pricing</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Initial Delivery Agent Accounts</span><span class="badge recommended">Recommended</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">What to Provide</div><div class="field-value">For each delivery agent: full name, phone number, email, assigned zone</div></div>
+    <div class="field"><div class="field-label">Steps</div><div class="field-value">1. Agent registers at /auth/register 2. Admin sets role to DELIVERY in database 3. Agent appears in delivery dashboard</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait partial">⚠ Partial — orders can be assigned manually without agent accounts</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Estimated Delivery Times by Zone</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Question for Owner</div><div class="field-value">What are your realistic delivery time commitments? (e.g., "Yaoundé same-day if ordered before 2pm")</div></div>
+    <div class="field"><div class="field-label">Current Placeholder</div><div class="field-value">"Douala/Yaoundé: 24–48h · Other cities: 2–5 business days"</div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">Shown on order success page and order confirmation email</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait partial">⚠ Partial — placeholder works but confirm accuracy</span></div></div>
+  </div></div>
+</div>
+
+
+<!-- ========== SECTION 22: LEGAL PAGES ========== -->
+<h2><span class="num">22</span> Legal Pages</h2>
+<p class="section-intro">The Terms of Service and Privacy Policy are already written but contain placeholder decisions that the owner must review and confirm.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Terms of Service — Owner Review &amp; Approval</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">File Location</div><div class="field-value"><code>apps/web/src/app/terms/page.tsx</code></div></div>
+    <div class="field"><div class="field-label">Items Needing Confirmation</div><div class="field-value">1. Return window (currently 7 days — is this correct?) 2. Defective product window (30 days — confirm) 3. Governing jurisdiction (currently Yaoundé — confirm) 4. Legal business name 5. Vendor commission rate</div></div>
+    <div class="field"><div class="field-label">Action Required</div><div class="field-value">Read the terms page at /terms, confirm or request changes to each clause</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait no">✗ No — operating without legal terms exposes the business to liability</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Return &amp; Refund Policy Details</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Questions for Owner</div><div class="field-value">1. How many days after delivery can a customer request a return? 2. Who pays return shipping? 3. Are any product categories non-returnable? 4. How long does a refund take to process?</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait no">✗ No — vague return policy causes disputes and chargebacks</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Privacy Policy — Owner Review</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">File Location</div><div class="field-value"><code>apps/web/src/app/privacy/page.tsx</code></div></div>
+    <div class="field"><div class="field-label">Items Needing Confirmation</div><div class="field-value">1. Data retention period (currently 7 years for payment records) 2. Whether you share data with any third parties beyond what is listed 3. DPO (Data Protection Officer) — required if you process EU citizen data</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait no">✗ No — legally required in most jurisdictions including Cameroon</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Shipping Policy</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Questions for Owner</div><div class="field-value">1. Do you ship internationally? 2. Free shipping threshold — currently 50,000 FCFA, is this correct? 3. Default shipping fee — currently 2,000 FCFA, is this correct? 4. Minimum order amount — currently 1,000 FCFA, is this correct?</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait no">✗ No — inaccurate shipping fees cause customer disputes</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Vendor Agreement / Seller Terms</span><span class="badge recommended">Recommended</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">What It Is</div><div class="field-value">Separate legal document for vendors covering commission, listing rules, prohibited items, payout schedule</div></div>
+    <div class="field"><div class="field-label">Action Required</div><div class="field-value">Draft with a local lawyer or use a marketplace vendor agreement template adapted for Cameroon</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait partial">⚠ Partial — can onboard first vendors without, but add before scaling</span></div></div>
+  </div></div>
+</div>
+
+<!-- ========== SECTION 23: CUSTOMER SUPPORT ========== -->
+<h2><span class="num">23</span> Customer Support</h2>
+<p class="section-intro">How customers reach you when they have problems with orders or products.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Support Email Address</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Question for Owner</div><div class="field-value">What email should customers write to for support? Same as business email or separate inbox?</div></div>
+    <div class="field"><div class="field-label">Recommendation</div><div class="field-value">Create <code>support@yourdomain.com</code> — separate from <code>hello@yourdomain.com</code> to categorize queries</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait no">✗ No — customers need a way to contact you</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">WhatsApp Business Number</span><span class="badge recommended">Recommended</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Question for Owner</div><div class="field-value">Do you have a WhatsApp Business account? If so, what is the number? Should it be shown on the contact page?</div></div>
+    <div class="field"><div class="field-label">Why Recommended</div><div class="field-value">WhatsApp is the primary customer support channel in Cameroon — customers expect it</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait partial">⚠ Partial — email alone works but WhatsApp dramatically improves customer trust</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Support Operating Hours</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Question for Owner</div><div class="field-value">What hours and days is support available? (e.g., Mon–Fri 8am–6pm, Sat 9am–2pm, closed Sunday)</div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">Displayed on contact page and support ticket acknowledgment email so customers know when to expect a response</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait partial">⚠ Partial — but must be defined before launch to set expectations</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Ticket Response SLA</span><span class="badge recommended">Recommended</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Question for Owner</div><div class="field-value">What is your commitment for responding to support tickets? (e.g., "We respond within 24 hours on business days")</div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">Auto-reply email to customers when they submit a ticket</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — generic "we'll respond soon" works temporarily</span></div></div>
+  </div></div>
+</div>
+
+<!-- ========== SECTION 24: SECURITY ========== -->
+<h2><span class="num">24</span> Security</h2>
+<p class="section-intro">Configurations and decisions that protect the platform from attacks and unauthorized access.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Rate Limiting Policy</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Current Setting</div><div class="field-value">100 requests per 60 seconds per IP (set via <code>RATE_LIMIT</code> env var)</div></div>
+    <div class="field"><div class="field-label">Question for Owner</div><div class="field-value">Is 100 requests/minute acceptable? Higher values allow faster browsing but reduce protection from bots.</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — current default is appropriate for most e-commerce traffic</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Admin Panel IP Restriction</span><span class="badge optional">Optional</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Question for Owner</div><div class="field-value">Do you want /admin routes accessible only from specific IP addresses? (Increases security but blocks access if your IP changes)</div></div>
+    <div class="field"><div class="field-label">How to Implement</div><div class="field-value">Add IP middleware to NestJS or use Vercel's firewall rules for the /admin path</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — JWT authentication already protects admin routes</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Error Monitoring (Sentry)</span><span class="badge recommended">Recommended</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">How to Obtain</div><div class="field-value">sentry.io → Sign up free → Create project → Copy DSN</div></div>
+    <div class="field"><div class="field-label">Expected Format</div><div class="field-value"><code>https://abc123@o123456.ingest.sentry.io/789</code></div></div>
+    <div class="field"><div class="field-label">Cost</div><div class="field-value">Free: 5,000 errors/month — sufficient for launch</div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">Alerts you when the API crashes or has unhandled errors — without this, you only find out when customers complain</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — add in first week after launch</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Two-Factor Authentication for Admin</span><span class="badge recommended">Recommended</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Question for Owner</div><div class="field-value">Do you want 2FA (TOTP via Google Authenticator) required for all admin accounts?</div></div>
+    <div class="field"><div class="field-label">Implementation Cost</div><div class="field-value">2–3 hours of development if required; uses <code>speakeasy</code> library</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — strong passwords + JWT provides baseline security; add 2FA post-launch</span></div></div>
+  </div></div>
+</div>
+
+<!-- ========== SECTION 25: MOBILE APP ========== -->
+<h2><span class="num">25</span> Mobile App Publishing</h2>
+<p class="section-intro">Publishing the React Native mobile app (not yet built) to Google Play and Apple App Store.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Google Play Developer Account</span><span class="badge optional">Optional</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">How to Obtain</div><div class="field-value">play.google.com/console → Sign in with Google → Pay one-time $25 fee → Account verified in 2–3 days</div></div>
+    <div class="field"><div class="field-label">Requirements</div><div class="field-value">Google account, valid credit/debit card for $25 fee, identity verification</div></div>
+    <div class="field"><div class="field-label">Cost</div><div class="field-value">$25 one-time registration fee</div></div>
+    <div class="field"><div class="field-label">App Bundle ID</div><div class="field-value">You choose: <code>com.destiny.ecommerce</code> — cannot be changed after publishing</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — website PWA works on mobile without an app store listing</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Apple Developer Program (iOS App Store)</span><span class="badge optional">Optional</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">How to Obtain</div><div class="field-value">developer.apple.com/programs → Enroll → Individual or Organization → Pay $99/year</div></div>
+    <div class="field"><div class="field-label">Requirements</div><div class="field-value">Apple ID, $99/year fee, D-U-N-S number if enrolling as organization (free from Dun & Bradstreet)</div></div>
+    <div class="field"><div class="field-label">Cost</div><div class="field-value">$99 USD per year — recurring</div></div>
+    <div class="field"><div class="field-label">Question for Owner</div><div class="field-value">Is iOS app a priority? Android has significantly higher market share in Cameroon.</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — Android-first is recommended for Cameroon market</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">App Store Assets</span><span class="badge optional">Optional</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">What to Prepare</div><div class="field-value">App icon 1024×1024px, feature graphic 1024×500px, 5–8 screenshots per device size, short description (80 chars), full description (4000 chars)</div></div>
+    <div class="field"><div class="field-label">How to Create Screenshots</div><div class="field-value">Use the app on an Android emulator, take screenshots, or use Figma mockups placed on device frames</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — only needed when submitting to app store</span></div></div>
+  </div></div>
+</div>
+
+<!-- ========== SECTION 26: PRODUCTION DEPLOYMENT ========== -->
+<h2><span class="num">26</span> Production Deployment</h2>
+<p class="section-intro">Final decisions and actions needed to take the platform live.</p>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Staging Environment Decision</span><span class="badge recommended">Recommended</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Question for Owner</div><div class="field-value">Do you want a staging environment (a copy of the site for testing) separate from the live site?</div></div>
+    <div class="field"><div class="field-label">Cost</div><div class="field-value">Doubles hosting cost — staging + production. Vercel preview deployments are free and serve as staging.</div></div>
+    <div class="field"><div class="field-label">Recommendation</div><div class="field-value">Use Vercel preview deployments (free) as staging — every GitHub PR creates a preview URL automatically</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — Vercel previews are sufficient for staging</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">CI/CD Pipeline Preference</span><span class="badge recommended">Recommended</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Current Setup</div><div class="field-value">Vercel auto-deploys on git push to main branch. Railway auto-deploys on git push.</div></div>
+    <div class="field"><div class="field-label">Question for Owner</div><div class="field-value">Should every push to main auto-deploy? Or should deploys require manual approval?</div></div>
+    <div class="field"><div class="field-label">Recommendation</div><div class="field-value">Auto-deploy to staging, manual promote to production for production stability</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — auto-deploy is fine for initial launch</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Uptime Monitoring</span><span class="badge recommended">Recommended</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">How to Set Up</div><div class="field-value">UptimeRobot (free) → Create account → Add monitor → URL: <code>https://your-api.railway.app/health</code> → Alert via email/WhatsApp when down</div></div>
+    <div class="field"><div class="field-label">Cost</div><div class="field-value">Free for 50 monitors, 5-minute check intervals</div></div>
+    <div class="field"><div class="field-label">Why Needed</div><div class="field-value">You are notified when the API goes down — without this, you only know when customers complain</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait yes">✓ Yes — add in first week after launch</span></div></div>
+  </div></div>
+</div>
+
+<div class="req">
+  <div class="req-header"><span class="req-name">Initial Product Catalog</span><span class="badge required">Required</span></div>
+  <div class="req-body"><div class="grid">
+    <div class="field"><div class="field-label">Question for Owner</div><div class="field-value">How many products will be live on day one? Do you have product photos, descriptions, and prices ready?</div></div>
+    <div class="field"><div class="field-label">What to Prepare Per Product</div><div class="field-value">Name, description, price, original price (if discounted), category, brand, 3–5 photos (min 800×800px), stock quantity</div></div>
+    <div class="field"><div class="field-label">How to Add</div><div class="field-value">Admin panel → Products → Add Product (once live) or via Prisma Studio seed script</div></div>
+    <div class="field"><div class="field-label">Can Launch Without?</div><div class="field-value"><span class="can-wait no">✗ No — an empty store cannot generate sales</span></div></div>
+  </div></div>
+</div>
+
+
+<!-- ========== MASTER TABLE ========== -->
+<h2><span class="num" style="background:#1a1a2e">📋</span> Master Requirements Table</h2>
+<p class="section-intro">Summary of every requirement, its current status, priority, and the action needed from the owner.</p>
+
+<table>
+<thead><tr><th>Requirement</th><th>Status</th><th>Priority</th><th>Owner Action Needed</th></tr></thead>
+<tbody>
+<tr><td><strong>Legal Business Name</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-critical">CRITICAL</td><td>Provide full legal registered name</td></tr>
+<tr><td><strong>Business Email Address</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-critical">CRITICAL</td><td>Create/confirm business email at your domain</td></tr>
+<tr><td><strong>Domain Name</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-critical">CRITICAL</td><td>Purchase domain at Namecheap/GoDaddy</td></tr>
+<tr><td><strong>Brand Logo (SVG/PNG)</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-critical">CRITICAL</td><td>Provide logo file — transparent background, min 512px</td></tr>
+<tr><td><strong>Official Store Name</strong></td><td><span class="s-needed">CONFIRM</span></td><td class="p-critical">CRITICAL</td><td>Confirm "Destiny E-Commerce" or provide final name</td></tr>
+<tr><td><strong>Vercel Account</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-critical">CRITICAL</td><td>Sign up at vercel.com with GitHub account</td></tr>
+<tr><td><strong>Railway Account</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-critical">CRITICAL</td><td>Sign up at railway.app with GitHub account</td></tr>
+<tr><td><strong>Neon Database URL</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-critical">CRITICAL</td><td>Create project at neon.tech, copy connection string</td></tr>
+<tr><td><strong>JWT_SECRET</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-critical">CRITICAL</td><td>Generate: <code>node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"</code></td></tr>
+<tr><td><strong>JWT_REFRESH_SECRET</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-critical">CRITICAL</td><td>Generate second unique secret (different from JWT_SECRET)</td></tr>
+<tr><td><strong>Super Admin Email + Password</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-critical">CRITICAL</td><td>Decide credentials, register, then update role in DB</td></tr>
+<tr><td><strong>MTN MoMo Number 653526767</strong></td><td><span class="s-needed">CONFIRM</span></td><td class="p-critical">CRITICAL</td><td>Confirm this is active, monitored, correct</td></tr>
+<tr><td><strong>Orange Money Number 640638536</strong></td><td><span class="s-needed">CONFIRM</span></td><td class="p-critical">CRITICAL</td><td>Confirm this is active, monitored, correct</td></tr>
+<tr><td><strong>Payment Verification Process + Hours</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-critical">CRITICAL</td><td>Define who monitors, what hours, max response time</td></tr>
+<tr><td><strong>Terms of Service — Owner Approval</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-critical">CRITICAL</td><td>Read /terms, approve or request changes</td></tr>
+<tr><td><strong>Return Policy Details</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-critical">CRITICAL</td><td>Confirm return window, who pays return shipping</td></tr>
+<tr><td><strong>Shipping Fees + Free Shipping Threshold</strong></td><td><span class="s-needed">CONFIRM</span></td><td class="p-critical">CRITICAL</td><td>Confirm 2,000 FCFA fee and 50,000 FCFA free threshold</td></tr>
+<tr><td><strong>Delivery Zones + Coverage</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-critical">CRITICAL</td><td>List cities you deliver to and fee for each zone</td></tr>
+<tr><td><strong>Initial Product Catalog</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-critical">CRITICAL</td><td>Prepare product photos, descriptions, prices for day-1 items</td></tr>
+<tr><td><strong>Support Contact Email</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-critical">CRITICAL</td><td>Create support@yourdomain.com or confirm existing email</td></tr>
+<tr><td><strong>Support Operating Hours</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-high">HIGH</td><td>Define hours support is available</td></tr>
+<tr><td><strong>DNS Nameserver Access</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-high">HIGH</td><td>Log in to domain registrar to add DNS records</td></tr>
+<tr><td><strong>Business Phone Confirmation</strong></td><td><span class="s-needed">CONFIRM</span></td><td class="p-high">HIGH</td><td>Confirm 653526767 is the official support phone</td></tr>
+<tr><td><strong>Brand Colors</strong></td><td><span class="s-needed">CONFIRM</span></td><td class="p-high">HIGH</td><td>Confirm pink/purple theme or provide hex codes</td></tr>
+<tr><td><strong>Email Provider (SendGrid/Gmail)</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-high">HIGH</td><td>Choose provider, create account, get API key/SMTP credentials</td></tr>
+<tr><td><strong>Sender Email + Display Name</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-high">HIGH</td><td>Decide From address for transactional emails</td></tr>
+<tr><td><strong>Cloudinary Account</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-high">HIGH</td><td>Sign up at cloudinary.com, create upload preset</td></tr>
+<tr><td><strong>Vendor Commission Rate</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-high">HIGH</td><td>Decide % commission on vendor sales</td></tr>
+<tr><td><strong>Vendor Verification Requirements</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-high">HIGH</td><td>List what documents vendors must submit</td></tr>
+<tr><td><strong>Vendor Payout Schedule</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-high">HIGH</td><td>Define when/how vendors get paid</td></tr>
+<tr><td><strong>Privacy Policy Approval</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-high">HIGH</td><td>Read /privacy, approve or request changes</td></tr>
+<tr><td><strong>Business Address</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-high">HIGH</td><td>Provide physical address for Terms and footer</td></tr>
+<tr><td><strong>Delivery Estimated Times</strong></td><td><span class="s-needed">CONFIRM</span></td><td class="p-high">HIGH</td><td>Confirm 24–48h Yaoundé/Douala, 2–5 days other cities</td></tr>
+<tr><td><strong>Email SPF/DKIM DNS Records</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-high">HIGH</td><td>Add records provided by email provider to DNS</td></tr>
+<tr><td><strong>WhatsApp Business Number</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-medium">MEDIUM</td><td>Provide WhatsApp Business number for customer support</td></tr>
+<tr><td><strong>Tagline / Slogan</strong></td><td><span class="s-optional">OPTIONAL</span></td><td class="p-medium">MEDIUM</td><td>Write 5–10 word tagline for hero section</td></tr>
+<tr><td><strong>About Us Content</strong></td><td><span class="s-optional">OPTIONAL</span></td><td class="p-medium">MEDIUM</td><td>Write 2–4 paragraphs about the business</td></tr>
+<tr><td><strong>Social Media Links</strong></td><td><span class="s-optional">OPTIONAL</span></td><td class="p-medium">MEDIUM</td><td>Provide Facebook/Instagram/TikTok handles</td></tr>
+<tr><td><strong>Africa's Talking SMS API</strong></td><td><span class="s-optional">OPTIONAL</span></td><td class="p-medium">MEDIUM</td><td>Register at africastalking.com, get API key</td></tr>
+<tr><td><strong>SMS Sender ID</strong></td><td><span class="s-optional">OPTIONAL</span></td><td class="p-medium">MEDIUM</td><td>Request business sender ID via Africa's Talking</td></tr>
+<tr><td><strong>Favicon + App Icons</strong></td><td><span class="s-needed">NEEDED</span></td><td class="p-medium">MEDIUM</td><td>Generate icon set at realfavicongenerator.net</td></tr>
+<tr><td><strong>Additional Admin Staff Accounts</strong></td><td><span class="s-optional">OPTIONAL</span></td><td class="p-medium">MEDIUM</td><td>List staff needing admin/support/delivery roles</td></tr>
+<tr><td><strong>Initial Delivery Agent Accounts</strong></td><td><span class="s-optional">OPTIONAL</span></td><td class="p-medium">MEDIUM</td><td>List agent names, phones, emails, zones</td></tr>
+<tr><td><strong>Sentry Error Monitoring</strong></td><td><span class="s-optional">OPTIONAL</span></td><td class="p-medium">MEDIUM</td><td>Sign up at sentry.io, get DSN URL</td></tr>
+<tr><td><strong>Uptime Monitoring (UptimeRobot)</strong></td><td><span class="s-optional">OPTIONAL</span></td><td class="p-medium">MEDIUM</td><td>Create free account, add API health endpoint</td></tr>
+<tr><td><strong>Google OAuth</strong></td><td><span class="s-optional">OPTIONAL</span></td><td class="p-low">LOW</td><td>Create Google Cloud project, enable OAuth, get credentials</td></tr>
+<tr><td><strong>Facebook OAuth</strong></td><td><span class="s-optional">OPTIONAL</span></td><td class="p-low">LOW</td><td>Create Facebook App, complete App Review</td></tr>
+<tr><td><strong>Firebase Push Notifications</strong></td><td><span class="s-optional">OPTIONAL</span></td><td class="p-low">LOW</td><td>Create Firebase project, download service account JSON</td></tr>
+<tr><td><strong>Google Maps API Key</strong></td><td><span class="s-optional">OPTIONAL</span></td><td class="p-low">LOW</td><td>Enable Maps API in Google Cloud Console</td></tr>
+<tr><td><strong>Stripe Integration</strong></td><td><span class="s-skip">SKIP</span></td><td class="p-low">LOW</td><td>Only if you have a bank account in a Stripe-supported country</td></tr>
+<tr><td><strong>PayPal Integration</strong></td><td><span class="s-skip">SKIP</span></td><td class="p-low">LOW</td><td>Only if you have a verified PayPal able to withdraw funds</td></tr>
+<tr><td><strong>Elasticsearch</strong></td><td><span class="s-skip">SKIP</span></td><td class="p-low">LOW</td><td>Not needed — PostgreSQL search is the current default</td></tr>
+<tr><td><strong>MTN MoMo Business API</strong></td><td><span class="s-skip">SKIP</span></td><td class="p-low">LOW</td><td>Future automation — manual verification works for now</td></tr>
+<tr><td><strong>Orange Money Business API</strong></td><td><span class="s-skip">SKIP</span></td><td class="p-low">LOW</td><td>Future automation — manual verification works for now</td></tr>
+<tr><td><strong>Google Play Developer Account</strong></td><td><span class="s-optional">OPTIONAL</span></td><td class="p-low">LOW</td><td>$25 one-time at play.google.com/console — for mobile app</td></tr>
+<tr><td><strong>Apple Developer Program</strong></td><td><span class="s-optional">OPTIONAL</span></td><td class="p-low">LOW</td><td>$99/year at developer.apple.com — for iOS app only</td></tr>
+<tr><td><strong>Business Registration Number</strong></td><td><span class="s-optional">OPTIONAL</span></td><td class="p-low">LOW</td><td>From CFE Cameroon — needed for future API partnerships</td></tr>
+<tr><td><strong>Tax ID (NIF)</strong></td><td><span class="s-optional">OPTIONAL</span></td><td class="p-low">LOW</td><td>From DGI Cameroon — needed for invoicing and formal partnerships</td></tr>
+<tr><td><strong>Vendor Agreement Document</strong></td><td><span class="s-optional">OPTIONAL</span></td><td class="p-low">LOW</td><td>Draft with local lawyer before onboarding multiple vendors</td></tr>
+<tr><td><strong>2FA for Admin Accounts</strong></td><td><span class="s-optional">OPTIONAL</span></td><td class="p-low">LOW</td><td>Decision needed — request development if required</td></tr>
+</tbody>
+</table>
+
+
+<!-- ========== LAUNCH READINESS CHECKLIST ========== -->
+<div class="launch">
+  <h2><span class="num" style="background:#7c3aed">🚀</span> Final Launch Readiness Checklist</h2>
+  <p style="color:rgba(255,255,255,.65);font-size:.85rem;margin-bottom:20px">Complete every BLOCKER item before going live. REQUIRED items should be done in Week 1. OPTIONAL items can wait.</p>
+
+  <p style="color:#e91e8c;font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">— BLOCKERS (Cannot Launch Without These) —</p>
+
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Purchase domain name</strong> — e.g. destinyshop.cm or destiny-ecommerce.com</div><span class="tag t-blocker">BLOCKER</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Create Vercel account</strong> → connect GitHub → deploy frontend app</div><span class="tag t-blocker">BLOCKER</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Create Railway account</strong> → connect GitHub → deploy API</div><span class="tag t-blocker">BLOCKER</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Create Neon database</strong> → copy DATABASE_URL to Railway env vars</div><span class="tag t-blocker">BLOCKER</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Run database migration</strong>: <code>npx prisma migrate deploy</code> on Railway</div><span class="tag t-blocker">BLOCKER</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Generate JWT_SECRET and JWT_REFRESH_SECRET</strong> → add to Railway env vars</div><span class="tag t-blocker">BLOCKER</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Set CORS_ORIGIN</strong> in Railway to match your Vercel/custom domain</div><span class="tag t-blocker">BLOCKER</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Set NEXT_PUBLIC_API_URL</strong> in Vercel to your Railway API URL</div><span class="tag t-blocker">BLOCKER</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Point domain DNS to Vercel</strong> → wait for SSL certificate (1–5 minutes)</div><span class="tag t-blocker">BLOCKER</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Register first account</strong> → update role to SUPER_ADMIN in database</div><span class="tag t-blocker">BLOCKER</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Upload initial product catalog</strong> via admin panel (min 10 products with photos)</div><span class="tag t-blocker">BLOCKER</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Confirm MTN MoMo 653526767 is active</strong> and being monitored for incoming payments</div><span class="tag t-blocker">BLOCKER</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Confirm Orange Money 640638536 is active</strong> and being monitored</div><span class="tag t-blocker">BLOCKER</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Replace all placeholder text</strong> — store name, email, phone, address, tagline throughout the site</div><span class="tag t-blocker">BLOCKER</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Upload brand logo</strong> — replace placeholder in header and favicon</div><span class="tag t-blocker">BLOCKER</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Review and approve Terms of Service</strong> at /terms — confirm all clauses are accurate</div><span class="tag t-blocker">BLOCKER</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Review and approve Privacy Policy</strong> at /privacy — confirm data handling is accurate</div><span class="tag t-blocker">BLOCKER</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Test complete order flow</strong> — register → browse → add to cart → checkout → submit payment proof → admin verifies → order confirmed</div><span class="tag t-blocker">BLOCKER</span></div>
+
+  <p style="color:#f97316;font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px;margin:20px 0 8px">— REQUIRED (Complete in Week 1 After Launch) —</p>
+
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Set up email (SendGrid or Gmail SMTP)</strong> → add SMTP credentials to Railway → test order confirmation email</div><span class="tag t-req">REQUIRED</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Add SPF/DKIM DNS records</strong> from your email provider → prevent spam filtering</div><span class="tag t-req">REQUIRED</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Set up Cloudinary</strong> → create account → add credentials → create upload preset → test product image upload</div><span class="tag t-req">REQUIRED</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Set up UptimeRobot</strong> → monitor /health endpoint → alert when API is down</div><span class="tag t-req">REQUIRED</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Set up Sentry</strong> → add DSN to Railway → monitor for API errors and crashes</div><span class="tag t-req">REQUIRED</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Add WhatsApp Business number</strong> to contact page and footer</div><span class="tag t-req">REQUIRED</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Define delivery zones and fees</strong> → update site settings in admin panel</div><span class="tag t-req">REQUIRED</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Onboard first delivery agents</strong> → register accounts → assign DELIVERY role</div><span class="tag t-req">REQUIRED</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Back up database credentials</strong> → store DATABASE_URL and all secrets in a password manager</div><span class="tag t-req">REQUIRED</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Publish social media pages</strong> → Facebook, Instagram — link to the store</div><span class="tag t-req">REQUIRED</span></div>
+
+  <p style="color:#7c3aed;font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px;margin:20px 0 8px">— OPTIONAL (Month 1–3 After Launch) —</p>
+
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Set up SMS notifications</strong> via Africa's Talking → request sender ID approval</div><span class="tag t-opt">OPTIONAL</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Integrate Google OAuth</strong> → "Sign in with Google" button on login page</div><span class="tag t-opt">OPTIONAL</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Integrate Facebook OAuth</strong> → "Continue with Facebook" button on login page</div><span class="tag t-opt">OPTIONAL</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Set up Firebase Push Notifications</strong> → notify customers of order updates</div><span class="tag t-opt">OPTIONAL</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Add Google Maps address autocomplete</strong> → reduce delivery address errors</div><span class="tag t-opt">OPTIONAL</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Build React Native mobile app</strong> → publish to Google Play Store ($25)</div><span class="tag t-opt">OPTIONAL</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Apply for MTN MoMo Business API</strong> → automate payment verification (2–8 weeks)</div><span class="tag t-opt">OPTIONAL</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Draft and publish Vendor Agreement</strong> → before onboarding multiple vendors</div><span class="tag t-opt">OPTIONAL</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Decide on Stripe/PayPal</strong> → only if you have access to a supported bank account</div><span class="tag t-opt">OPTIONAL</span></div>
+  <div class="launch-item"><div class="cb"></div><div class="txt"><strong>Register business legally</strong> → CFE Cameroon → obtain business registration number</div><span class="tag t-opt">OPTIONAL</span></div>
+</div>
+
+<!-- hidden copy target -->
+<pre id="copyTarget" style="position:absolute;left:-9999px;top:0;width:1px;height:1px;overflow:hidden;white-space:pre">
+================================================================================
+DESTINY E-COMMERCE — REQUIREMENTS COLLECTION CHECKLIST
+================================================================================
+
+SECTION 1: BUSINESS INFORMATION
+- Legal Business Name: NEEDED — provide full legal name as registered
+- Business Type/Structure: NEEDED — Sole Trader / SARL / SA / Association
+- Business Registration Number: OPTIONAL — from CFE Cameroon
+- Tax ID (NIF): OPTIONAL — from DGI Cameroon
+- Physical Business Address: NEEDED — Street, City, Region, Cameroon
+- Official Business Phone: CONFIRM — is 653526767 the official phone?
+- Official Business Email: NEEDED — create hello@yourdomain.com
+
+SECTION 2: COMPANY/BRAND INFORMATION
+- Official Store Name: CONFIRM — "Destiny E-Commerce" or final name?
+- Brand Logo (SVG/PNG): NEEDED — transparent bg, min 512x512px
+- Brand Colors: CONFIRM — current pink #E91E8C / purple #7C3AED or change?
+- Tagline/Slogan: OPTIONAL — 5-10 word tagline
+- About Us Content: OPTIONAL — 2-4 paragraphs
+- Social Media Links: OPTIONAL — Facebook, Instagram, TikTok handles
+
+SECTION 3: DOMAIN AND BRANDING
+- Domain Name: NEEDED — register at Namecheap/GoDaddy (est. $10-15/yr)
+- DNS Access: NEEDED — login to domain registrar to add DNS records
+- SSL Certificate: AUTO — Vercel provisions automatically (free)
+- Favicon + App Icons: NEEDED — generate at realfavicongenerator.net
+
+SECTION 4: HOSTING
+- Vercel Account (Frontend): NEEDED — sign up at vercel.com (free)
+- Railway Account (API): NEEDED — sign up at railway.app ($5 credit/mo free)
+- Server Region: RECOMMENDED — EU West (Frankfurt) for lowest Cameroon latency
+
+SECTION 5: DATABASE
+- Neon PostgreSQL URL: NEEDED — create project at neon.tech (3GB free)
+  Format: postgresql://user:pass@host/destiny_ecommerce?sslmode=require
+- Run Migration: NEEDED — npx prisma migrate deploy (includes SiteSettings)
+- Backup Policy: CONFIRM — Neon 7-day restore sufficient?
+
+SECTION 6: AUTHENTICATION
+- JWT_SECRET: NEEDED — generate with: node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+- JWT_REFRESH_SECRET: NEEDED — generate DIFFERENT value from JWT_SECRET
+- Session Timeout: CONFIRM — current: access 15min / refresh 7 days
+
+SECTION 7: GOOGLE OAUTH
+- Google Cloud Project: OPTIONAL — console.cloud.google.com
+- OAuth Client ID: OPTIONAL — format: 123456-abc.apps.googleusercontent.com
+- OAuth Client Secret: OPTIONAL — format: GOCSPX-xxxxx
+- Redirect URI: https://yourdomain.com/api/auth/google/callback
+
+SECTION 8: FACEBOOK OAUTH
+- Facebook App ID: OPTIONAL — developers.facebook.com
+- Facebook App Secret: OPTIONAL
+- Note: App must pass Facebook review before live users can use it
+
+SECTION 9: EMAIL NOTIFICATIONS
+- Provider Choice: NEEDED — SendGrid (recommended) / Gmail / Mailgun
+  SendGrid: sendgrid.com → API Keys → "Mail Send" permission → format SG.xxx
+  Gmail: Gmail → Security → App Passwords → format: xxxx xxxx xxxx xxxx
+- Sender Email: NEEDED — e.g. orders@yourdomain.com
+- SPF/DKIM DNS Records: NEEDED — add records from email provider to DNS
+
+SECTION 10: SMS NOTIFICATIONS
+- Africa's Talking API Key: OPTIONAL — africastalking.com (format: atsk_xxx)
+- AT Username: OPTIONAL — your registered username
+- SMS Sender ID: OPTIONAL — max 11 chars, e.g. DESTINY (needs approval 2-5 days)
+- Cost: ~0.8 XAF/SMS to Cameroon (~$0.0013)
+
+SECTION 11: PUSH NOTIFICATIONS
+- Firebase Project: OPTIONAL — console.firebase.google.com
+- Service Account JSON: OPTIONAL — download from Project Settings → Service Accounts
+- Fields needed: project_id, client_email, private_key
+- Cost: Free forever for FCM
+
+SECTION 12: CLOUDINARY
+- Cloud Name: NEEDED — sign up at cloudinary.com (free: 25GB)
+- API Key: NEEDED — from Cloudinary dashboard
+- API Secret: NEEDED — from Cloudinary dashboard
+- Upload Preset: NEEDED — create "destiny_products" preset in Settings → Upload
+
+SECTION 13: ELASTICSEARCH
+- Status: SKIP for launch — PostgreSQL search is the default
+- Optional later: cloud.elastic.co — starts at ~$16/month
+
+SECTION 14: GOOGLE MAPS
+- Maps API Key: OPTIONAL — console.cloud.google.com (format: AIzaSyXXX)
+- $200/mo free credit — ~28,000 map loads free per month
+
+SECTION 15: MTN MOBILE MONEY
+- Receiving Number: CONFIRM — 653526767 (active? monitored? personal or business?)
+- USSD: *126*4*1*653526767*AMOUNT#
+- Alt Float: *126*46*4*1*12614654209793*AMOUNT#
+- Monitoring: NEEDED — define who checks payments, what hours, max response time
+- Business API: SKIP for now — momodeveloper.mtn.com (2-8 weeks to approve)
+
+SECTION 16: ORANGE MONEY
+- Receiving Number: CONFIRM — 640638536, Cho Clinton Teneng (active? monitored?)
+- Business API: SKIP for now — developer.orange.com (4-12 weeks to approve)
+
+SECTION 17: STRIPE
+- Status: SKIP — Cameroon not a supported payout country
+- Only enable if you have a bank account in a Stripe-supported country
+
+SECTION 18: PAYPAL
+- Status: SKIP — PayPal restricts Cameroon withdrawals
+- Only enable if you have a verified PayPal linked to a supported bank account
+
+SECTION 19: ADMIN ACCOUNTS
+- Super Admin Email + Password: NEEDED — register, then update role in DB
+- Additional Staff: OPTIONAL — list staff with roles: ADMIN/SUPPORT/DELIVERY
+
+SECTION 20: VENDOR ACCOUNTS
+- Commission Rate: NEEDED — what % of vendor sales does Destiny keep?
+- Verification Requirements: NEEDED — what must vendors submit to be approved?
+- Payout Schedule: NEEDED — when and how are vendors paid?
+
+SECTION 21: DELIVERY AGENTS
+- Coverage Zones + Fees: NEEDED — list cities and fee per zone
+- Agent Accounts: RECOMMENDED — names, phones, emails per agent
+- Delivery Times: CONFIRM — 24-48h Yaoundé/Douala, 2-5 days others accurate?
+
+SECTION 22: LEGAL PAGES
+- Terms of Service Approval: NEEDED — read /terms, confirm or request changes
+- Return Window: CONFIRM — currently 7 days from delivery
+- Return Shipping: CONFIRM — currently customer's responsibility
+- Defective Product Window: CONFIRM — currently 30 days
+- Governing Jurisdiction: CONFIRM — currently Yaoundé, Cameroon courts
+- Privacy Policy Approval: NEEDED — read /privacy, confirm or request changes
+- Data Retention: CONFIRM — currently 7 years for payment records
+- Shipping Policy: CONFIRM — free shipping over 50,000 FCFA, default 2,000 FCFA fee
+- Vendor Agreement: OPTIONAL — draft with lawyer before scaling vendors
+
+SECTION 23: CUSTOMER SUPPORT
+- Support Email: NEEDED — support@yourdomain.com or confirm existing
+- WhatsApp Number: RECOMMENDED — WhatsApp Business number for customers
+- Operating Hours: NEEDED — define days and hours support is available
+- Ticket SLA: RECOMMENDED — define response time commitment
+
+SECTION 24: SECURITY
+- Rate Limit: CONFIRM — currently 100 req/60s per IP
+- Admin IP Restriction: OPTIONAL — your decision (JWT auth already protects)
+- Sentry DSN: RECOMMENDED — sentry.io free (5,000 errors/mo)
+- 2FA for Admin: OPTIONAL — your decision
+
+SECTION 25: MOBILE APP
+- Google Play Account: OPTIONAL — $25 one-time at play.google.com/console
+- Apple Developer Program: OPTIONAL — $99/year at developer.apple.com
+- App Bundle ID: OPTIONAL — choose now (cannot change): com.destiny.ecommerce
+- App Store Assets: OPTIONAL — icons, screenshots, descriptions
+
+SECTION 26: PRODUCTION DEPLOYMENT
+- Staging Environment: CONFIRM — Vercel preview deployments sufficient?
+- CI/CD: CONFIRM — auto-deploy on push to main OK?
+- Uptime Monitoring: RECOMMENDED — UptimeRobot free account
+- Initial Product Catalog: NEEDED — photos, descriptions, prices ready for day 1
+
+================================================================================
+MASTER REQUIREMENTS TABLE — PRIORITY SUMMARY
+================================================================================
+
+CRITICAL (Must have before any customer can use the site):
+  Domain Name | Brand Logo | Vercel Account | Railway Account | Neon DB URL
+  JWT_SECRET | JWT_REFRESH_SECRET | Super Admin Account | MTN/Orange Confirmation
+  Payment Monitoring Process | Terms Approval | Privacy Approval
+  Shipping Policy Confirmation | Delivery Zones | Product Catalog | Support Email
+
+HIGH (Needed in first week):
+  Email Provider (SendGrid/Gmail) | Sender Email | SPF/DKIM DNS
+  Cloudinary Account | WhatsApp Support | Support Hours | Business Address
+  Vendor Commission Rate | Vendor Payout Schedule | Favicon
+
+MEDIUM (First month):
+  SMS (Africa's Talking) | Social Media Links | Sentry | UptimeRobot
+  Additional Staff Accounts | Delivery Agent Accounts | About Us Content
+
+LOW / OPTIONAL (Post-launch):
+  Google OAuth | Facebook OAuth | Firebase Push | Google Maps
+  Stripe | PayPal | Elasticsearch | MTN API | Orange API
+  Mobile App (Google Play / Apple) | Business Registration | 2FA
+
+================================================================================
+LAUNCH READINESS — FINAL CHECKLIST
+================================================================================
+
+BLOCKERS (cannot go live without these):
+[ ] Purchase domain
+[ ] Create Vercel account → deploy frontend
+[ ] Create Railway account → deploy API
+[ ] Create Neon database → set DATABASE_URL
+[ ] Run: npx prisma migrate deploy
+[ ] Generate JWT_SECRET and JWT_REFRESH_SECRET → add to Railway
+[ ] Set CORS_ORIGIN in Railway to match domain
+[ ] Set NEXT_PUBLIC_API_URL in Vercel to Railway URL
+[ ] Point domain DNS to Vercel → SSL auto-provisioned
+[ ] Register → update account role to SUPER_ADMIN in database
+[ ] Upload min 10 products with photos
+[ ] Confirm MTN 653526767 monitored and active
+[ ] Confirm Orange 640638536 monitored and active
+[ ] Replace all placeholder text (name, email, phone, address)
+[ ] Upload brand logo (replace placeholder)
+[ ] Review and approve Terms of Service at /terms
+[ ] Review and approve Privacy Policy at /privacy
+[ ] Test full order flow end-to-end (register → checkout → admin approve)
+
+REQUIRED WEEK 1:
+[ ] Set up email (SendGrid/Gmail) → add SMTP credentials → test order emails
+[ ] Add SPF/DKIM DNS records from email provider
+[ ] Set up Cloudinary → create upload preset → test image upload
+[ ] Set up UptimeRobot → monitor /health endpoint
+[ ] Set up Sentry → add DSN → monitor errors
+[ ] Add WhatsApp Business number to contact page
+[ ] Define delivery zones and fees in admin settings
+[ ] Onboard delivery agents
+[ ] Back up all credentials in password manager
+[ ] Publish Facebook/Instagram social pages
+
+OPTIONAL MONTH 1-3:
+[ ] SMS via Africa's Talking
+[ ] Google OAuth (Sign in with Google)
+[ ] Facebook OAuth
+[ ] Firebase Push Notifications
+[ ] Google Maps address autocomplete
+[ ] React Native mobile app → Google Play ($25)
+[ ] Apply for MTN MoMo Business API (2-8 weeks)
+[ ] Draft Vendor Agreement with local lawyer
+[ ] Decide Stripe/PayPal (if overseas bank account available)
+[ ] Register business at CFE Cameroon
+
+================================================================================
+END OF REQUIREMENTS COLLECTION CHECKLIST
+================================================================================
+</pre>
+
+</div>
+
+<script>
+function copyAll(btn) {
+  const text = document.getElementById('copyTarget').textContent;
+  const orig = btn.innerHTML;
+  function done() {
+    btn.classList.add('done');
+    btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+    setTimeout(() => { btn.classList.remove('done'); btn.innerHTML = orig; }, 3000);
+  }
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(done).catch(fb);
+  } else { fb(); }
+  function fb() {
+    const t = document.createElement('textarea');
+    t.value = text; t.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(t); t.select();
+    document.execCommand('copy'); document.body.removeChild(t); done();
+  }
+}
+</script>
+</body>
+</html>
