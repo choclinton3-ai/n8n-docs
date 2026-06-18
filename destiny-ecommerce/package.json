@@ -1,0 +1,28 @@
+{
+  "name": "destiny-ecommerce",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Destiny E-Commerce - Your Success, Our Destiny",
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "start": "turbo run start",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "db:generate": "cd apps/api && npx prisma generate",
+    "db:migrate": "cd apps/api && npx prisma migrate dev",
+    "db:seed": "cd apps/api && npx prisma db seed",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.3",
+    "prettier": "^3.4.2",
+    "@types/node": "^22.10.2"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}

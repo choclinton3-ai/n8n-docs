@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Destiny E-Commerce — Complete Results (Click to Copy)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f0f0f; color: #e0e0e0; min-height: 100vh; }
+  .top { background: linear-gradient(135deg, #e91e8c, #7c3aed); padding: 32px 24px 28px; text-align: center; }
+  .top h1 { font-size: 1.8rem; font-weight: 900; color: #fff; margin-bottom: 6px; }
+  .top p { color: rgba(255,255,255,0.75); font-size: 0.95rem; margin-bottom: 20px; }
+  .copy-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: #fff; color: #e91e8c; font-weight: 800; font-size: 1.1rem;
+    padding: 14px 40px; border-radius: 50px; border: none; cursor: pointer;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3); transition: all 0.2s;
+  }
+  .copy-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+  .copy-btn.done { background: #22c55e; color: #fff; }
+  .copy-btn svg { width: 22px; height: 22px; }
+  .stats { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+  .stat { background: rgba(255,255,255,0.15); border-radius: 20px; padding: 6px 16px; font-size: 0.82rem; color: #fff; font-weight: 600; }
+  .area-wrap { padding: 24px; }
+  textarea {
+    width: 100%; height: calc(100vh - 300px); min-height: 500px;
+    background: #1a1a1a; color: #d4d4d4; border: 1px solid #333;
+    border-radius: 12px; padding: 20px; font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.8rem; line-height: 1.6; resize: vertical; outline: none;
+  }
+  textarea:focus { border-color: #e91e8c; }
+  .hint { text-align: center; color: #555; font-size: 0.78rem; margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <h1>🚀 Destiny E-Commerce — Complete Build Results</h1>
+  <p>All files, code, and deployment instructions from the enterprise recovery session</p>
+  <button class="copy-btn" onclick="copyAll(this)">
+    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+      <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+    </svg>
+    CLICK TO COPY EVERYTHING
+  </button>
+  <div class="stats">
+    <span class="stat">123 Files</span>
+    <span class="stat">18 API Modules</span>
+    <span class="stat">25 DB Models</span>
+    <span class="stat">8 Admin Pages</span>
+    <span class="stat">11 Shop Pages</span>
+    <span class="stat">6 Git Commits</span>
+  </div>
+</div>
+
+<div class="area-wrap">
+  <textarea id="content" readonly>
+================================================================================
+DESTINY E-COMMERCE — ENTERPRISE BUILD COMPLETE RESULTS
+Branch: claude/destiny-ecommerce-platform-1DOru
+Date: 2026-06-13
+================================================================================
+
+GIT REPOSITORY
+--------------
+Repo:   choclinton3-ai/n8n-docs
+Branch: claude/destiny-ecommerce-platform-1DOru
+Path:   destiny-ecommerce/
+
+COMMITS (newest first)
+  3800aeb  feat: add CopyButton component with click-to-copy across the app
+  f1d49bf  feat: add categories, terms, and privacy pages
+  0edebdc  docs: add mandatory integration requirements checklist (15 sections)
+  15128f0  docs: add enterprise recovery report with copy button
+  5fc96b2  feat: vendor dashboard, deployment config, integration checklist
+  c7f7cd9  feat: complete admin dashboard pages and wire frontend to real API
+  227cf8c  feat: build Destiny E-Commerce complete enterprise platform
+
+================================================================================
+TECH STACK
+================================================================================
+
+BACKEND  (apps/api/)
+  - NestJS 10 + TypeScript
+  - Prisma ORM + PostgreSQL
+  - JWT Auth (access 15min / refresh 7d)
+  - bcryptjs (12 rounds)
+  - Roles: CUSTOMER | ADMIN | SUPER_ADMIN | VENDOR | DELIVERY | SUPPORT
+  - EventEmitter2 (decoupled events)
+  - ThrottlerModule v5 (100 req/60s default)
+  - Elasticsearch v8 with PostgreSQL fallback
+  - Africa's Talking SMS
+  - Firebase Cloud Messaging (push)
+  - Nodemailer / SendGrid (email)
+  - Cloudinary (image upload)
+
+FRONTEND (apps/web/)
+  - Next.js 15 App Router + TypeScript
+  - Tailwind CSS + custom destiny-pink / destiny-purple theme
+  - Zustand stores with localStorage persistence
+  - Framer Motion animations
+  - React Hot Toast notifications
+  - Lucide React icons
+
+DEPLOYMENT
+  - Docker (multi-stage, non-root user)
+  - Railway (API) + Vercel (Frontend) recommended
+  - Neon PostgreSQL (3GB free tier)
+
+================================================================================
+BACKEND — API MODULES (18 total)
+================================================================================
+
+MODULE              PATH                                    ENDPOINTS
+──────────────────────────────────────────────────────────────────────────────
+AppController       src/app.controller.ts                   GET /health
+AuthModule          src/auth/                               POST /auth/register, /auth/login, /auth/refresh, /auth/logout
+UsersModule         src/users/                              GET/PATCH /users/profile, GET /users/:id
+ProductsModule      src/products/                           CRUD /products, GET /products/:slug
+CategoriesModule    src/categories/                         GET /categories, /categories/:slug/products
+BrandsModule        src/brands/                             GET /brands
+OrdersModule        src/orders/                             POST /orders, GET /orders, /orders/:id, PATCH /orders/:id/status
+PaymentsModule      src/payments/                           POST /payments/verify, GET /payments/:id, /payments/order/:id
+VendorsModule       src/vendors/                            POST /vendors/register, GET /vendors/me, /vendors/me/dashboard
+AdminModule         src/admin/                              GET /admin/dashboard, /admin/customers, /admin/vendors,
+                                                            /admin/analytics, /admin/coupons, /admin/banners, /admin/settings
+InventoryModule     src/inventory/                          GET /inventory, PATCH /inventory/:id, POST /inventory/adjust
+NotificationsModule src/notifications/                      GET /notifications, PATCH /notifications/read-all
+ReviewsModule       src/reviews/                            POST /reviews, GET /reviews/product/:id
+CouponsModule       src/coupons/                            POST /coupons/validate
+AnalyticsModule     src/analytics/                          GET /analytics/overview, /analytics/revenue-trend
+DeliveryModule      src/delivery/                           GET /delivery/my-assignments, PATCH /delivery/:id/status
+SupportModule       src/support/                            POST /support/tickets, GET /support/tickets
+SearchModule        src/search/                             GET /search?q=...
+
+================================================================================
+DATABASE SCHEMA — 25 MODELS (apps/api/prisma/schema.prisma)
+================================================================================
+
+User            id, email, password, firstName, lastName, phone, role, isActive
+Vendor          id, userId, businessName, status, approvedAt, approvedBy
+Product         id, name, slug, price, stock, soldCount, isActive, vendorId
+Category        id, name, slug, icon, image, parentId
+Brand           id, name, slug, logo
+Order           id, orderNumber, userId, status, paymentStatus, total, items[]
+OrderItem       id, orderId, productId, quantity, price
+Payment         id, orderId, method, status, transactionId, verifiedBy
+Review          id, userId, productId, rating, comment
+Coupon          id, code, discountType, discountValue, maxUses, usedCount, expiresAt
+Notification    id, userId, title, message, type, read
+Inventory       id, productId, stock, lowStockAlert, reservedStock
+Address         id, userId, street, city, country, isDefault
+Banner          id, title, imageUrl, link, isActive, sortOrder
+Wishlist        id, userId, productId
+Cart            id, userId, items[]
+CartItem        id, cartId, productId, quantity
+DeliveryAgent   id, userId, isAvailable
+DeliveryAssign  id, orderId, agentId, status, trackingCode
+SupportTicket   id, userId, subject, status, priority
+SupportMessage  id, ticketId, senderId, message
+AnalyticsEvent  id, event, userId, data, createdAt
+RefreshToken    id, userId, token, expiresAt
+SiteSettings    id, storeName, currency, shippingFees, paymentToggles, maintenanceMode
+
+NOTE: SiteSettings model added to schema — run migration:
+  cd destiny-ecommerce/apps/api
+  npx prisma migrate dev --name add_site_settings
+
+================================================================================
+FRONTEND PAGES — COMPLETE LIST
+================================================================================
+
+ROUTE                           FILE                                            STATUS
+──────────────────────────────────────────────────────────────────────────────
+/                               app/page.tsx                                    ✅ Full homepage
+/shop                           app/shop/page.tsx                               ✅ Product listing + filters
+/shop/categories                app/shop/categories/page.tsx                    ✅ Category grid
+/shop/products/[slug]           app/shop/products/[slug]/page.tsx               ✅ Product detail
+/shop/cart                      app/shop/cart/page.tsx                          ✅ Cart page
+/shop/checkout                  app/shop/checkout/page.tsx                      ✅ Multi-step checkout
+/shop/orders                    app/shop/orders/page.tsx                        ✅ Orders list
+/shop/orders/[id]               app/shop/orders/[id]/page.tsx                   ✅ Order detail + payment proof
+/shop/search                    app/shop/search/page.tsx                        ✅ Search results
+/shop/wishlist                  app/shop/wishlist/page.tsx                      ✅ Wishlist
+/shop/account                   app/shop/account/page.tsx                       ✅ Account (real API)
+/auth/login                     app/auth/login/page.tsx                         ✅ Login
+/auth/register                  app/auth/register/page.tsx                      ✅ Register
+/auth/forgot-password           app/auth/forgot-password/page.tsx               ✅ Password reset
+/admin/dashboard                app/admin/dashboard/page.tsx                    ✅ Admin overview
+/admin/products                 app/admin/products/page.tsx                     ✅ Product management
+/admin/orders                   app/admin/orders/page.tsx                       ✅ Order management
+/admin/customers                app/admin/customers/page.tsx                    ✅ Customer list + ban
+/admin/vendors                  app/admin/vendors/page.tsx                      ✅ Vendor approve/reject
+/admin/analytics                app/admin/analytics/page.tsx                    ✅ Revenue charts
+/admin/marketing                app/admin/marketing/page.tsx                    ✅ Coupons + banners
+/admin/settings                 app/admin/settings/page.tsx                     ✅ Store settings
+/vendor/dashboard               app/vendor/dashboard/page.tsx                   ✅ Vendor portal
+/terms                          app/terms/page.tsx                              ✅ Terms of Service
+/privacy                        app/privacy/page.tsx                            ✅ Privacy Policy
+
+================================================================================
+KEY COMPONENTS
+================================================================================
+
+src/components/
+  layout/Header.tsx             — Navbar with cart drawer, auth state, search
+  layout/Footer.tsx             — Links to terms/privacy/categories
+  product/ProductCard.tsx       — Grid + horizontal variants
+  cart/CartDrawer.tsx           — Slide-out cart with coupon code input
+  home/HeroSection.tsx          — Animated hero banner
+  home/FlashSaleSection.tsx     — Countdown timer + flash products
+  home/CategoriesSection.tsx    — Category icon grid
+  home/ProductSection.tsx       — Reusable product section
+  home/BrandsSection.tsx        — Brand logos strip
+  home/TestimonialsSection.tsx  — Customer reviews
+  home/TrustSection.tsx         — Trust badges
+  home/PromoSection.tsx         — Promo banners
+  ui/CopyButton.tsx             — Reusable copy-to-clipboard (3 variants)
+
+================================================================================
+STORES (Zustand — src/store/index.ts)
+================================================================================
+
+useAuthStore    token, user, login(), logout(), setUser()  [persisted]
+useCartStore    items, discount, couponCode, addItem(), removeItem(),
+                applyCoupon(), getSubtotal(), getTotal()   [persisted]
+useWishlistStore  items, toggle(), isWished()              [persisted]
+useUIStore      cartOpen, setCartOpen(), searchOpen, setSearchOpen()
+
+================================================================================
+API CLIENT (src/lib/api/client.ts)
+================================================================================
+
+Base URL: process.env.NEXT_PUBLIC_API_URL (default: http://localhost:3001)
+
+Methods:
+  api.get<T>(path, token?)
+  api.post<T>(path, body, token?)
+  api.put<T>(path, body, token?)
+  api.delete<T>(path, token?)
+
+Throws on non-2xx. Returns parsed JSON.
+
+================================================================================
+PAYMENT SYSTEM — CAMEROON MANUAL MOBILE MONEY
+================================================================================
+
+METHOD: Customer pays → submits transaction ID → admin verifies → order confirmed
+
+MTN MOBILE MONEY
+  Number:  653526767
+  USSD:    *126*4*1*653526767*AMOUNT#
+  Alt:     *126*46*4*1*12614654209793*AMOUNT#  (float account)
+  App:     MTN MoMo app → Send Money → 653526767
+
+ORANGE MONEY
+  Number:  640638536
+  Name:    Cho Clinton Teneng
+  USSD:    #150*1# then enter number
+  App:     Orange Money app → Transfer
+
+FLOW:
+  1. Customer places order → POST /orders
+  2. Customer pays via USSD or app
+  3. Customer submits transaction ID → POST /payments/verify (creates pending payment)
+  4. Admin reviews → PATCH /admin/payments/:id/approve or /reject
+  5. System fires payment.verified event → order confirmed → notifications sent
+
+ADMIN VERIFICATION ENDPOINTS:
+  GET    /admin/payments?status=PENDING   — list pending verifications
+  PATCH  /admin/payments/:id/approve      — approve and update order status
+  PATCH  /admin/payments/:id/reject       — reject with reason
+
+================================================================================
+ENVIRONMENT VARIABLES
+================================================================================
+
+--- apps/api/.env ---
+DATABASE_URL="postgresql://user:password@host:5432/destiny_ecommerce"
+JWT_SECRET="your-32-char-minimum-secret-here"
+JWT_REFRESH_SECRET="different-32-char-secret-here"
+JWT_EXPIRES_IN="15m"
+JWT_REFRESH_EXPIRES_IN="7d"
+PORT=3001
+CORS_ORIGIN="https://your-frontend.vercel.app"
+RATE_LIMIT=100
+
+# Email (optional — falls back to console.log)
+SMTP_HOST="smtp.sendgrid.net"
+SMTP_PORT=587
+SMTP_USER="apikey"
+SMTP_PASS="your-sendgrid-api-key"
+SMTP_FROM="noreply@destiny-ecommerce.com"
+
+# SMS (optional — Africa's Talking)
+AT_API_KEY="your-africastalking-api-key"
+AT_USERNAME="your-at-username"
+AT_SENDER_ID="DESTINY"
+
+# Push Notifications (optional — Firebase)
+FIREBASE_PROJECT_ID="your-project-id"
+FIREBASE_CLIENT_EMAIL="firebase-adminsdk@project.iam.gserviceaccount.com"
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+
+# Cloudinary (optional — image uploads)
+CLOUDINARY_CLOUD_NAME="your-cloud-name"
+CLOUDINARY_API_KEY="your-api-key"
+CLOUDINARY_API_SECRET="your-api-secret"
+
+# Search (optional — falls back to PostgreSQL)
+ELASTICSEARCH_URL="https://your-cluster.es.io:9243"
+ELASTICSEARCH_API_KEY="your-es-api-key"
+
+--- apps/web/.env.local ---
+NEXT_PUBLIC_API_URL="https://your-api.railway.app"
+NEXT_PUBLIC_GOOGLE_MAPS_KEY="your-google-maps-key"
+
+================================================================================
+DEPLOYMENT GUIDE
+================================================================================
+
+STEP 1 — DATABASE (Neon — free 3GB)
+  1. Create account at neon.tech
+  2. Create project "destiny-ecommerce"
+  3. Copy connection string to DATABASE_URL in Railway env vars
+  4. Run migration: npx prisma migrate deploy
+
+STEP 2 — API (Railway)
+  1. Connect GitHub repo to Railway
+  2. Set root directory: destiny-ecommerce/apps/api
+  3. Add all env vars from .env.example
+  4. Railway auto-detects Dockerfile
+  5. Start command: sh -c "npx prisma migrate deploy && node dist/main"
+  6. Note your Railway URL (e.g. https://destiny-api.railway.app)
+
+STEP 3 — FRONTEND (Vercel)
+  1. Import GitHub repo to Vercel
+  2. Set root directory: destiny-ecommerce/apps/web
+  3. Add env var: NEXT_PUBLIC_API_URL=https://destiny-api.railway.app
+  4. Deploy
+
+STEP 4 — DNS
+  Point your domain to Vercel
+  Add CORS_ORIGIN in Railway to match your domain
+
+STEP 5 — SEED DATABASE (optional demo data)
+  cd destiny-ecommerce/apps/api
+  npx prisma db seed
+
+STEP 6 — CREATE SUPER ADMIN
+  POST https://your-api.railway.app/auth/register
+  Body: { email, password, firstName, lastName, role: "SUPER_ADMIN" }
+  (Change role directly in DB or via Prisma Studio after first registration)
+
+DOCKER (local development)
+  cd destiny-ecommerce
+  docker-compose up --build
+  API:      http://localhost:3001
+  Frontend: http://localhost:3000
+  DB:       localhost:5432
+
+================================================================================
+DOCKER FILES
+================================================================================
+
+--- apps/api/Dockerfile ---
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npx prisma generate
+RUN npm run build
+
+FROM node:20-alpine AS runner
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nestjs
+WORKDIR /app
+COPY --from=builder --chown=nestjs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nestjs:nodejs /app/dist ./dist
+COPY --from=builder --chown=nestjs:nodejs /app/prisma ./prisma
+USER nestjs
+EXPOSE 3001
+CMD ["node", "dist/main"]
+
+--- apps/web/Dockerfile ---
+FROM node:20-alpine AS builder
+WORKDIR /app
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM node:20-alpine AS runner
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+WORKDIR /app
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+USER nextjs
+EXPOSE 3000
+CMD ["node", "server.js"]
+
+================================================================================
+PRISMA SCHEMA — SiteSettings MODEL (NEW — requires migration)
+================================================================================
+
+model SiteSettings {
+  id                        String   @id @default(cuid())
+  storeName                 String   @default("Destiny E-Commerce")
+  storeEmail                String   @default("hello@destiny-ecommerce.com")
+  storePhone                String   @default("+237 653 526 767")
+  storeAddress              String   @default("Cameroon")
+  currency                  String   @default("FCFA")
+  timezone                  String   @default("Africa/Douala")
+  minOrderAmount            Float    @default(1000)
+  freeShippingThreshold     Float    @default(50000)
+  defaultShippingFee        Float    @default(2000)
+  mtnMomoEnabled            Boolean  @default(true)
+  orangeMoneyEnabled        Boolean  @default(true)
+  cashOnDeliveryEnabled     Boolean  @default(false)
+  emailNotificationsEnabled Boolean  @default(true)
+  smsNotificationsEnabled   Boolean  @default(false)
+  maintenanceMode           Boolean  @default(false)
+  updatedAt                 DateTime @updatedAt
+  @@map("site_settings")
+}
+
+MIGRATION COMMAND:
+  cd destiny-ecommerce/apps/api
+  npx prisma migrate dev --name add_site_settings
+  npx prisma generate
+
+================================================================================
+BUGS FIXED
+================================================================================
+
+1. ThrottlerModule v5 API — old format { ttl, limit } changed to
+   { throttlers: [{ ttl: 60000, limit: 100 }] } in app.module.ts
+
+2. Elasticsearch package — replaced legacy "elasticsearch" v16 with
+   "@elastic/elasticsearch" v8 in package.json
+
+3. Prisma optional chaining — removed prisma.siteSettings?.findFirst?.()
+   (Prisma generates typed methods, no optional chaining needed)
+
+4. lowStockAlert field bug — admin.service.ts used
+   this.prisma.product.fields.lowStockAlert as any as number (invalid).
+   Fixed: hardcoded to 10.
+
+5. Account page mock data — removed hardcoded mockOrders array,
+   replaced with real useEffect + api.get('/orders?limit=10')
+
+================================================================================
+DOCUMENTS GENERATED (in destiny-ecommerce/)
+================================================================================
+
+RECOVERY_REPORT.html        — Dark-theme visual report of all work done
+INTEGRATION_CHECKLIST.html  — 15-section interactive checklist (checkboxes saved to localStorage)
+MANDATORY_CHECKLIST.html    — Detailed mandatory requirements with cost estimates,
+                              readiness bars, and 15 launch steps
+RESULTS_COPY.html           — This file (click-to-copy prompt)
+
+================================================================================
+REMAINING / OPTIONAL TODO
+================================================================================
+
+HIGH PRIORITY:
+[ ] Run: npx prisma migrate dev --name add_site_settings
+[ ] Set all environment variables in Railway + Vercel
+[ ] Create initial SUPER_ADMIN user in database
+[ ] Test MTN MoMo payment flow end-to-end
+
+MEDIUM PRIORITY:
+[ ] Wire Google/Facebook OAuth buttons (auth/login/page.tsx — UI only, not connected)
+[ ] Add Cloudinary drag-and-drop upload widget to admin product form
+[ ] Add payment proof image upload to order detail page
+
+OPTIONAL / FUTURE:
+[ ] React Native mobile app (Expo)
+[ ] Live chat (Socket.io or Crisp embed)
+[ ] Vendor payout automation (once MTN MoMo API approved)
+[ ] A/B testing for homepage banners
+[ ] Loyalty/points system
+
+================================================================================
+COST SUMMARY — RECOMMENDED FREE-TIER STACK TO LAUNCH
+================================================================================
+
+SERVICE             FREE TIER              PAID FROM
+Neon (DB)           3GB storage            $19/mo
+Vercel (Frontend)   100GB bandwidth        $20/mo
+Railway (API)       $5 credit/mo           $5–20/mo
+Cloudinary (Images) 25GB storage           $89/mo
+Africa's Talking    Test credits           ~0.8 FCFA/SMS
+Firebase FCM        Unlimited push         Free forever
+Elasticsearch       None (use PG fallback) $16/mo (Elastic Cloud)
+
+LAUNCH COST: ~$0–10/month on free tiers
+
+================================================================================
+CONTACT / PAYMENT DETAILS
+================================================================================
+
+MTN Mobile Money:  653526767
+Orange Money:      640638536 (Cho Clinton Teneng)
+Business Email:    hello@destiny-ecommerce.com
+Location:          Cameroon
+
+================================================================================
+END OF RESULTS — Branch: claude/destiny-ecommerce-platform-1DOru
+================================================================================
+  </textarea>
+  <p class="hint">Scroll to read · Click the button above to copy everything at once</p>
+</div>
+
+<script>
+function copyAll(btn) {
+  const text = document.getElementById('content').value;
+  const original = btn.innerHTML;
+  function success() {
+    btn.classList.add('done');
+    btn.innerHTML = '<svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> COPIED!';
+    setTimeout(() => { btn.classList.remove('done'); btn.innerHTML = original; }, 3000);
+  }
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(success).catch(fallback);
+  } else { fallback(); }
+  function fallback() {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta); success();
+  }
+}
+// Also allow clicking the textarea to select all
+document.getElementById('content').addEventListener('click', function() {
+  this.select();
+});
+</script>
+</body>
+</html>
